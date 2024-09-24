@@ -1,8 +1,7 @@
-node_modules
-public/storage
-.vendor
+*.node_modules
+*.vendor
 storage/log
 storage/oauth-private.key
 storage/oauth-public.key
-.env
-.env.example
+*.env
+*.env.example
