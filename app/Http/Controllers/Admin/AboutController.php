@@ -7,22 +7,16 @@ use Illuminate\Http\Request;
 use Validator;
 use App\Models\AboutDetails;
 use DataTables;
+use Illuminate\Support\Facades\Auth;
 
 
 class AboutController extends Controller
 {
     public function list(Request $request){
-        if($request->ajax()):
-            $tax = AboutDetails::with('country')->with('state')->latest();
-            return Datatables::of($tax)
-                ->addIndexColumn()
-                ->addColumn('action', function($row){
-                    $actionBtn = '<a href="'.route('admin.about_us.edit',['id'=>encrypt($row->id)]).'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" onclick="taxDelete('.$row->id.')">Delete</a>';
-                    return $actionBtn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-        endif;
+       $data= AboutDetails::get();
+       if(!empty($data)){
+        return view("admin.about_us.index",compact('data'));
+       }
        return view("admin.about_us.index");
     }
     public function create(Request $request){
@@ -30,28 +24,33 @@ class AboutController extends Controller
     }
     public function store(Request $request){
         $rule = [
-            'country_id'=>'required',
-            'state_id'=>'required',
-            'tax'=>'required'
+            'ownerName'=>'required',
+            'content'=>'required',
+            'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000'
         ];
         $validator = Validator::make($request->all(),$rule);
         if($validator->fails()) :
             return redirect()->back()->withErrors($validator)->withInput();
         else:
-            $tax = AboutDetails::create([
-                'admin_id' =>$request->input('country_id'),
-                'about_video_url' =>$request->input('state_id'),
-                'about_heading'=>$request->input('tax'),
-                'about_content'=>$request->input('tax'),
-                'about_short_content'=>$request->input('tax'),
-                'about_inst_date'=>$request->input('tax'),
-                'about_update_date'=>$request->input('tax'),
-                'about_ip'=>$request->input('tax'),
-            ]);
-            if($tax):
-                return to_route('admin.about_us.list')->with('success','Carousel Created Successfully !');
+          
+            $aboutUs = new AboutDetails();
+            $aboutUs->admin_id =Auth::user()->id;
+            $aboutUs->about_heading=$request->ownerName;
+            $aboutUs->about_content=$request->content;
+
+            if($request->hasfile('image'))
+            {
+                $file = $request->file('image');
+                $extenstion = $file->getClientOriginalExtension();
+                $filename = time().'.'.$extenstion;
+                $file->move('storage/uploads/about/', $filename);
+                $aboutUs->about_profile_img = $filename;
+            }
+            $aboutUs->save();
+            if($aboutUs):
+                return to_route('admin.about_us.list')->with('success','About us Created Successfully !');
             else:
-                return redirect()->back()->with('error','Carousel Not created successfully');
+                return redirect()->back()->with('error','About us  Not created successfully');
             endif;
         endif;
     }

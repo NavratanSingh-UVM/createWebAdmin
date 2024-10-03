@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class AboutDetails extends Model
 {
     use HasFactory;
+    protected $table='about_details';
+    protected $fillable = [
+        'about_id',
+        'admin_id'
+    ];
 }

@@ -25,36 +25,40 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="form-validation">
-                                  <form class="form-valide" method="post" action="{{ route('admin.about_us.store') }}">
+                                  <form class="form-valide" role="form"  method="post"  enctype="multipart/form-data" id="add-about-form" action="{{ route('admin.about_us.store') }}">
                                         @csrf
+                                        <div class="col-lg-6">
+                                           <div class="form-group">
+                                               <label for="property-photo">Image<span class="text-danger">*</span></label>
+                                                <div class="custom-file">
+                                                 <img src="" alt="" srcset="" height="100" width="100">
+                                                   {{-- @if (!empty($propertyListing))
+                                                     <img src="{{ url('storage/upload/property_image/main_image/' . $propertyListing->property_main_photos) }}" alt="" srcset="" height="100" width="100">
+                                                     <input type="hidden" name="old_image" value="">
+                                                   @endif --}}
+                                                  <input type="file" class="form-control"  id="about-photo"  name="image" accept=".png, .jpg, .jpeg, .jpg">
+                                                  <span class="image text-danger"></span>
+                                              </div>
+                                            </div>
+                                        </div>
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val-username">Country Name<span class="text-danger">*</span>
+                                            <label class="col-lg-4 col-form-label" for="val-username">Owner Name<span class="text-danger">*</span>
                                             </label>
                                              <div class="col-lg-6">
-                                                <input type="text" class="form-control" id="tax" name="tax" placeholder="Enter a tax.." value=" ">
+                                                <input type="text" class="form-control" id="ownerName" name="ownerName" placeholder="Heading" value=" ">
                                                 <span class="tax text-danger"></span>  
                                             </div>
                                         </div>
-                                        
-                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val-username">State Name<span class="text-danger">*</span>
-                                            </label>
-                                            <div class="col-lg-6">
-                                                <input type="text" class="form-control" id="tax" name="tax" placeholder="Enter a tax.." value=" ">
-                                                <span class="tax text-danger"></span>  
-                                            </div>
+                                         <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="description">Content</label>
+                                             <textarea id="textarea" name="content" rows="4"></textarea>
+                                            <span class="description text-danger"></span>
                                         </div>
-                                           <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="tax">Tax <span class="text-danger">*</span>
-                                            </label>
-                                            <div class="col-lg-6">
-                                                <input type="text" class="form-control" id="tax" name="tax" placeholder="Enter a tax.." value=" ">
-                                                <span class="tax text-danger"></span>  
-                                            </div>
-                                        </div>
+                                    </div>
                                         <div class="form-group row">
                                             <div class="col-lg-8 ml-auto">
-                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                                <button type="submit" class="btn btn-primary add-about-form">Submit</button>
                                             </div>
                                         </div>
                                     </form>
@@ -69,4 +73,36 @@
         <!--**********************************
             Content body end
         ***********************************-->
+     <script>
+       var editorTextarea
+           ClassicEditor.create( document.querySelector( '#textarea' ) )
+           .then (editor => {
+               editorTextarea = editor;
+              })
+           .catch( error => {
+              console.error( error );
+           } );
+
+        $ .validator.addMethod ("ckminlength", function (value, element, params) {
+            let content_length = editorTextarea.plugins.get( 'WordCount' );
+            return this.optional(element) || content_length.characters > params;
+        }, "Please enter {0} characters minimum.");
+
+       $("#my_form_id").validate({
+             ignore: [],
+             rules: {
+                 textarea: {
+                     required: true,
+                     ckminlength: 10,
+                 },
+             },
+             messages: {
+                 textarea: {
+                     required: "Your personnal text in your language",
+                     ckminlength: "Your personnal text in your language"
+                 }
+             },
+       })
+    </script>
 @endsection
+ 
