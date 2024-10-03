@@ -6,9 +6,9 @@ use Auth;
 use Session;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\PartnerListing;
+use App\Models\ClientDetail;
 use App\Models\PropertyListing;
-use App\Models\BookingInformation;
+use App\Models\BookingDetail;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -18,8 +18,8 @@ class DashboardController extends Controller
     public function index () {
         $totalProperties = PropertyListing::count();
         $featureListing = PropertyListing::where('feature','1')->count();
-        $partnerListing = PartnerListing::count();
-        $totalBooking = BookingInformation::where('status','confirmed')->count();
+        $partnerListing = ClientDetail::count();
+        $totalBooking = BookingDetail::where('book_status','1')->count();
         $users = User::whereHas('roles',function($q){
             $q->whereNot('name','super-admin');
         })->latest()->take(10)->get();
@@ -53,7 +53,6 @@ class DashboardController extends Controller
             'name'=>$request->input('firstName'),
             'email'=>$request->input('email'),
             'phone'=>$request->input('phone'),
-            'type'=>'super-admin',
             'image'=> $profileImage??auth()->user()->image,
             'password'=>$request->input('newPassword')!=null?Hash::make($request->input('newPassword')):auth()->user()->password,
             'show_password'=>$request->input('newPassword')!=null?$request->input('newPassword'):auth()->user()->show_password,
@@ -68,6 +67,6 @@ class DashboardController extends Controller
     public function logout() {
         Session::flush();
         Auth::logout();
-        return to_route('admin.login');
+        return to_route('login');
     }
 }

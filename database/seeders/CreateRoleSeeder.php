@@ -17,14 +17,9 @@ class CreateRoleSeeder extends Seeder
     public function run(): void
     {
         $role=Role::create([
-            'name'=>'Owner',
+            'name'=>'admin',
         ]);
-        $role=Role::create([
-            'name'=>'Traveller',
-        ]);
-        $role=Role::create([
-            'name'=>'Partner',
-        ]);
+        
          
         CancellentionPolicy::create([
             'name'=>'48 Hour Policy',

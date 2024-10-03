@@ -19,14 +19,8 @@ class RedirectIfAuthenticated
     {
         $guards = empty($guards) ? [null] : $guards;
         foreach ($guards as $guard) {
-            if(Auth::user() && Auth::user()->hasRole(['super-admin'])) {
+            if(Auth::user() && Auth::user()->hasRole(['admin'])) {
                 return redirect()->route('admin.dashboard');
-            }
-            if(Auth::user() && Auth::user()->hasRole(['Owner'])) {
-                return redirect()->route('owner.dashboard');
-            }
-            if(Auth::user() && Auth::user()->hasRole(['Traveller'])) {
-                return redirect()->route('traveller.dashboard');
             }
             if (Auth::guard($guard)->check()) {
                 return redirect(RouteServiceProvider::HOME);

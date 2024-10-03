@@ -9,204 +9,90 @@ use App\Models\SubAminities;
 
 class AminitiesController extends Controller
 {
-    /*
-    Manage main Aminity Method start
-    */
-
-    public function manageMainAminity (Request $request) {
-
-        return view("admin.master.aminity.main");
-    }
-
-    /*
-    Manage main Aminity Method end
-    */
-
-    /*
-    Create Main Aminity method start
-    */
-    public function createMainAminty() {
-        return view('admin.master.aminity.create-main');
-    }
-    /*
-    Create Main Aminity method end
-    */
-    public function storeMainAminity(Request $request) {
-        $rule = [
-            'aminity_name'=>'required|unique:main_aminities'
-        ];
-        $validator = Validator::make($request->all(),$rule);
-        if($validator->fails()) :
-            return redirect()->back()->withErrors($validator)->withInput();
-        else:
-            $mainAminity = MainAminity::create([
-                'aminity_name'=>$request->input('aminity_name'),
-                'status'=>'1'
-            ]);
-            if($mainAminity):
-                return to_route('admin.master.manage.main.aminity')->with('success','Aminity Created Successfully !.');
-            else:
-                return redirect()->back()->with('error',"Aminity Not Created, Please try again !.");
-            endif;
-
-        endif;
-    }
-    /*
-        Store Main Aminity Method Start
-    */
-    /*
-        Store Main Aminity Method end
-    */
-
-    public function getAmenitesUsingDatatble(Request $request) {
-        if ($request->ajax()) {
-            $data = MainAminity::latest()->get();
-            return Datatables::of($data)
+    public function list(Request $request){
+        if($request->ajax()):
+            $tax = AboutDetails::with('country')->with('state')->latest();
+            return Datatables::of($tax)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $actionBtn = '<a href="'.route('admin.master.edit.main.aminities',['id'=>encrypt($row->id)]).'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" onclick="amenitiesDelete('.$row->id.')">Delete</a>';
+                    $actionBtn = '<a href="'.route('admin.amenities.edit',['id'=>encrypt($row->id)]).'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" onclick="taxDelete('.$row->id.')">Delete</a>';
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
-        }
-    }
-
-    // Aminities Delete Method
-
-    public function DeleteMAinAminity(Request $request) {
-        $mainAminity = MainAminity::find($request->input('id'))->delete();
-        if($mainAminity):
-            return response()->json([
-                'status'=>'1',
-                'msg'=>"Aminities Delete Successfully !"
-            ]);
-        else:
-            return response()->json([
-                'status'=>'0',
-                'msg'=>"Aminities Not Delete, Please Try again !"
-            ]);
         endif;
+       return view("admin.amenites.index");
     }
-
-    // edit Aminities Method
-    public function editMainAminity ($id) {
-        $aminities = MainAminity::findOrFail(decrypt($id));
-        return view('admin.master.aminity.edit-main',compact('aminities'));
+    public function create(Request $request){
+        $countries = Country::get();
+        $states = State::with('country')->get();
+            return view("admin.amenites.create",compact('countries','states'));
     }
-
-    // Update main aminities
-    public function updateMainAminities(Request $request) {
+    public function store(Request $request){
         $rule = [
-            'aminity_name'=>'required|unique:main_aminities'
+            'country_id'=>'required',
+            'state_id'=>'required',
+            'tax'=>'required'
         ];
         $validator = Validator::make($request->all(),$rule);
         if($validator->fails()) :
             return redirect()->back()->withErrors($validator)->withInput();
         else:
-            $mainAminity = MainAminity::where('id',decrypt($request->id))->update([
-                'aminity_name'=>$request->input('aminity_name'),
-                'status'=>'1'
+            $tax = AboutDetails::create([
+                'country_id' =>$request->input('country_id'),
+                'state_id' =>$request->input('state_id'),
+                'tax'=>$request->input('tax')
             ]);
-            if($mainAminity):
-                return to_route('admin.master.manage.main.aminity')->with('success','Aminity Updated Successfully !.');
+            if($tax):
+                return to_route('admin.amenities.list')->with('success','Carousel Created Successfully !');
             else:
-                return redirect()->back()->with('error',"Aminity Not update, Please try again !.");
+                return redirect()->back()->with('error','Carousel Not created successfully');
             endif;
-
         endif;
     }
-
-    public function manageSubAminity (Request $request) {
-        if ($request->ajax()) {
-            $data = SubAminities::with('mainAminities')->latest()->get();
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', function($row){
-                    $actionBtn = '<a href="'.route('admin.master.edit.sub.aminities',['id'=>encrypt($row->id)]).'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" onclick="subAmenitiesDelete('.$row->id.')">Delete</a>';
-                    return $actionBtn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-        }
-        return view("admin.master.aminity.sub-index");
+    public function edit($id) {
+        $countries = Country::get();
+        $states = State::get();
+        $data = Carousel::findOrFail(decrypt($id));
+        return view ('admin.amenites.edit',compact('countries','states','data'));
     }
 
-    public function createsubAminty() {
-        $mainAminities = MainAminity::get();
-        return view("admin.master.aminity.create-sub-aminities",compact('mainAminities'));
-    }
-
-
-    // Store Sub aminity Method
-    public function storeSubAminity(Request $request) {
+    public function Update(Request $request) {
         $rule = [
-            'main_aminity_name'=>'required',
-            'name'=>'required|unique:sub_aminities'
+            'country_id'=>'required',
+            'state_id' => 'required',
+            'tax'=>'required'
         ];
         $validator = Validator::make($request->all(),$rule);
         if($validator->fails()) :
             return redirect()->back()->withErrors($validator)->withInput();
         else:
-            $mainAminity = SubAminities::create([
-                'main_aminities_id'=>$request->input('main_aminity_name'),
-                'name'=>$request->input('name'),
+            $tax = AboutDetails::where('id',decrypt($request->input('id')))->update([
+                'country_id' =>$request->input('country_id'),
+                'state_id' =>$request->input('state_id'),
+                'tax'=>$request->input('tax')
             ]);
-            if($mainAminity):
-                return to_route('admin.master.manage.sub.aminity')->with('success','Sub Aminities created Successfully !.');
+            if($tax):
+                return to_route('admin.amenities.list')->with('success','About us Updated Successfully !');
             else:
-                return redirect()->back()->with('error',"Sub Aminities Not created, Please try again !.");
+                return redirect()->back()->with('error','About us Not Updated successfully');
             endif;
-
         endif;
     }
 
-    // Delete Sub Aminities
-    public function DeleteSubAminity(Request $request) {
-        $SubAminities = SubAminities::find($request->input('id'))->delete();
-        if($SubAminities):
+    public function destroy(Request $request){
+        $result = AboutDetails::where('id',$request->input('id'))->delete();
+        if($result):
             return response()->json([
-                'status'=>'1',
-                'msg'=>"Aminities Delete Successfully !"
+                'status'=>200,
+                'message'=>'About us  Delete Successfully'
             ]);
         else:
             return response()->json([
-                'status'=>'0',
-                'msg'=>"Aminities Not Delete, Please Try again !"
+                'status'=>500,
+                'message'=>'About us Not Delete, Please Try again',
             ]);
         endif;
+
     }
-
-    // Edit Sub Aminity
-    public function editSubAminity ($id) {
-        $subAminities = SubAminities::findOrFail(decrypt($id));
-        $mainAminities = MainAminity::get();
-        return view('admin.master.aminity.edit-sub',compact('subAminities','mainAminities'));
-    }
-
-    // Update Sub Aminity
-    public function updateSubAminities (Request $request) {
-        $rule = [
-            'main_aminity_name'=>'required',
-            'name'=>'required'
-        ];
-        $validator = Validator::make($request->all(),$rule);
-        if($validator->fails()) :
-            return redirect()->back()->withErrors($validator)->withInput();
-        else:
-            $mainAminity = SubAminities::where('id',decrypt($request->input('id')))->update([
-                'main_aminities_id'=>$request->input('main_aminity_name'),
-                'name'=>$request->input('name'),
-            ]);
-            if($mainAminity):
-                return to_route('admin.master.manage.sub.aminity')->with('success','Sub Aminities updated Successfully !.');
-            else:
-                return redirect()->back()->with('error',"Sub Aminities Not updated, Please try again !.");
-            endif;
-
-        endif;
-    }
-
-
-
 }

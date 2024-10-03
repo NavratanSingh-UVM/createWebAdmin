@@ -20,12 +20,12 @@ class RoleSeeder extends Seeder
         // ]);
 
         $user = User::create([
-            'name'=>"My BNB Rentals",
-            'email'=>"bookings@mybnbrentals.com",
-            'password'=>Hash::make('Mybnbrentals@123#'),
-            'show_password'=>"Mybnbrentals@123#"
+            'name'=>"Admin",
+            'email'=>"navratansingh.uvm@gmail.com",
+            'password'=>Hash::make('Nav@1234#'),
+            'show_password'=>"Nav@1234#"
         ]);
 
-        $user->assignRole("super-admin");
+        $user->assignRole("admin");
     }
 }

@@ -9,7 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>@stack('title')</title>
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('frontend-assets/img/favicon.png') }}">
+    <link rel="icon" type="image/png"  href="{{ asset('frontend-assets/img/favicon.png') }}">
     <!-- Pignose Calender -->
     <link href="{{ asset('assets/plugins/pg-calendar/css/pignose.calendar.min.css') }}" rel="stylesheet">
     <!-- Chartist -->

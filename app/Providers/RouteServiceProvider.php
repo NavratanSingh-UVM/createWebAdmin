@@ -21,7 +21,6 @@ class RouteServiceProvider extends ServiceProvider
     protected $adminNameSpace = "App\Http\Controllers\Admin";
     protected $NameSpace = "App\Http\Controllers";
     protected $apiNameSpace = "App\Http\Controllers\Api";
-    protected $travllerNameSpace = "App\Http\Controllers\Traveller";
 
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
@@ -40,18 +39,9 @@ class RouteServiceProvider extends ServiceProvider
 
             Route::middleware('web')->namespace($this->NameSpace)
                 ->group(base_path('routes/web.php'));
-            
             // Admin Route Service Provider
             Route::middleware('web')->namespace($this->adminNameSpace)->prefix('admin')->name('admin.')
                 ->group(base_path('routes/admin.php'));
-
-            // Owner Route Service Perovide
-            Route::middleware('web')->namespace($this->NameSpace)
-                ->group(base_path('routes/owner.php'));
-
-            // Traveller Route Service provider 
-            Route::middleware('web')->namespace($this->travllerNameSpace)->prefix('traveller')->name('traveller.')
-                ->group(base_path('routes/travller.php'));
         });
     }
 }

@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>BNB Rentals Admin Login</title>
+    <title>Admin Login</title>
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('frontend-assets/img/favicon.png') }}">
     <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous"> -->
@@ -34,7 +34,7 @@
                     <div class="form-input-content">
                         <div class="card login-form mb-0">
                             <div class="card-body pt-5">
-                                <a class="text-center" href="javascript:void();"> <h4>BNB Rental Owner Login</h4></a>
+                                <a class="text-center" href="javascript:void();"> <h4>Admin Login</h4></a>
                                 <form class="mt-5 mb-5 login-input" id="login-form">
                                     <div class="form-group">
                                         @csrf
@@ -50,7 +50,7 @@
                                     </button>
                                     <button class="btn login-form__btn submit w-100"  type="submit">Sign In</button>
                                 </form>
-                                <p class="mt-5 login-form__footer text-center"> <a href="{{route('admin.forget.password')}}" class="text-primary ">Forget Password</a></p>
+                                <!-- <p class="mt-5 login-form__footer text-center"> <a href="{{route('admin.forget.password')}}" class="text-primary ">Forget Password</a></p> -->
                             </div>
                         </div>
                     </div>
@@ -76,7 +76,7 @@
             let formData = new FormData($("#login-form")[0]);
             $.ajax({
                 type: 'POST',
-                url:"{{ route('admin.check.creditials') }}",
+                url:"{{ route('check.creditials') }}",
                 data:formData,
                 contentType: false,
                 processData: false,
