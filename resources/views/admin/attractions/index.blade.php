@@ -12,7 +12,7 @@
                     @include('flash-message.flash-message')
                     <div class="row">
                         <div class="col-md-6"><h4 style="color:black">Area Attraction</h4></div>
-                        <div class="col-md-6 text-right"><a href="{{ route('admin.amenities.create') }}" class="btn mb-1 btn-primary float-right">Add Area Attraction <span class="btn-icon-right"><i class="fa fa-plus"></i></span>
+                        <div class="col-md-6 text-right"><a href="{{ route('admin.attraction.create') }}" class="btn mb-1 btn-primary float-right">Add Area Attraction <span class="btn-icon-right"><i class="fa fa-plus"></i></span>
                         </a> </div>                                
                     </div>
                 </div>
@@ -24,16 +24,16 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-bordered zero-configuration display nowrap" style="width:100%" id="owner-list">
+                                    <table class="table table-striped table-bordered zero-configuration display nowrap" style="width:100%" id="attraction-list">
                                         <thead>
                                             <tr>
                                                 <th>Sr No.</th>
-                                                <th>Customer Name</th>
-                                                <th>Customer Email</th>
-                                                <th>Customer Phone</th>
-                                                <th>Password</th>
-                                                <th>Status</th>
-                                                {{-- <th>Action</th> --}}
+                                                <th>Property Name</th>
+                                                <th>Image</th>
+                                                <th>Heading</th>
+                                                <th>Content</th>
+                                                {{-- <th>Status</th> --}}
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -54,7 +54,7 @@
 @push('js')
 <script>
    $(function () {
-    var table = $('#owner-list').DataTable({
+    var table = $('#attraction-list').DataTable({
         "language": {
         "zeroRecords": "No record(s) found.",
          searchPlaceholder: "Search records"
@@ -70,16 +70,16 @@
        bStateSave: true,
        scrollX: true,
         ajax:{
-            url:"{{route('admin.user.management')}}",
+            url:"{{route('admin.attraction.list')}}",
         },
         dataType: 'html',
         columns: [
             {data: 'DT_RowIndex' ,name:'DT_RowIndex',searchable: false,orderable: false},
-            {data: 'name', name: 'name',orderable: false},
-            {data: 'email', name: 'email',orderable: false},
-            {data: 'phone', name: 'phone',orderable: false,defaultContent:919786123454},
-            {data: 'show_password', name: 'show_password',orderable: false},
-            {data: 'status', name: 'status',orderable: false},
+            {data: 'property_id', name: 'property_id',orderable: false},
+            {data: 'image', name: 'image',orderable: false},
+            {data: 'heading', name:'heading',orderable: false,defaultContent:919786123454},
+            {data: 'content', name:'content',orderable: false},
+            {data: 'action', name: 'action',orderable: false},
         ],
     });
     $.fn.dataTable.ext.errMode = 'none';
@@ -98,25 +98,37 @@
         table.draw();
     })
   });
-
-function userStatusChange(value,id){
-    showLoader();
-       $.ajax({
-        url: "{{ route('admin.change.user.status') }}",
-        type: 'POST',
-        dataType: "json",
-        data:{'id':id,"value":value,'_token': '{{ csrf_token()}}'},
-        cache:false,
-        success:function (res) {
-            hideLoader();
-            if(res.status=='1'){
-                toastr.success(res.msg)
-                setTimeout(function() {
-                    location.reload();
-                },500);
-            }else{
-                toastr.error(res.msg)
-            }
+//   state  Delete Method
+function attractionDelete(id){
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+            showLoader();
+            $.ajax({
+                url: "{{ route('admin.attraction.delete') }}",
+                type: 'POST',
+                dataType: "json",
+                data:{'id':id,'_token': '{{ csrf_token()}}'},
+                cache:false,
+                success:function (res) {
+                    hideLoader();
+                    Swal.fire(
+                        'Confirmed!',
+                        res.msg,
+                        ).then((res)=>{
+                            setTimeout(function() {
+                                location.reload();
+                            },500);
+                    })
+                }
+            });
         }
     });
 }

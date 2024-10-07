@@ -9,8 +9,8 @@
                             <i class="icon-speedometer menu-icon"></i><span class="nav-text">Dashboard</span>
                         </a>
                     </li>
-                     <li @if(in_array(request()->route()->getName(),['admin.about_us.list'])) class="mega-menu mega-menu-sm active" @endif>
-                        <a href="{{ route('admin.about_us.list') }}" aria-expanded="false" @if(in_array(request()->route()->getName(),['admin.about_us.list'])) class="active" @endif>
+                     <li @if(in_array(request()->route()->getName(),['admin.about_us.create'])) class="mega-menu mega-menu-sm active" @endif>
+                        <a href="{{ route('admin.about_us.create') }}" aria-expanded="false" @if(in_array(request()->route()->getName(),['admin.about_us.create'])) class="active" @endif>
                             <i class="icon-grid menu-icon"></i><span class="nav-text">About Us</span>
                         </a>
                     </li>

@@ -5,21 +5,23 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
-use App\Models\Country;
 use App\Models\State;
-use App\Models\AboutDetails;
+use App\Models\Attraction;
 use DataTables;
 use App\Models\SubAminities;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class AttractionController extends Controller
 {
     public function list(Request $request){
         if($request->ajax()):
-            $tax = AboutDetails::with('country')->with('state')->latest();
-            return Datatables::of($tax)
+            $attraction = Attraction::get();
+            return Datatables::of($attraction)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $actionBtn = '<a href="'.route('admin.attraction.edit',['id'=>encrypt($row->id)]).'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" onclick="taxDelete('.$row->id.')">Delete</a>';
+                    $actionBtn = '<a href="'.route('admin.attraction.create',['id'=>encrypt($row->id)]).'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" onclick="attractionDelete('.$row->id.')">Delete</a>';
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
@@ -27,74 +29,87 @@ class AttractionController extends Controller
         endif;
        return view("admin.attractions.index");
     }
-    public function create(Request $request){
-        $countries = Country::get();
-        $states = State::with('country')->get();
-            return view("admin.attractions.create",compact('countries','states'));
+    public function create($propert_id=null){
+        // $propertyTypes = PropertyType::get();
+        $data = "";
+        if(!is_null($propert_id)){
+            $data = Attraction::where("id",decrypt($propert_id))->first();
+         return view("admin.attractions.create",compact('data'));
+        }
+            return view("admin.attractions.create",compact('data'));
+        
     }
     public function store(Request $request){
-        $rule = [
-            'country_id'=>'required',
-            'state_id'=>'required',
-            'tax'=>'required'
-        ];
-        $validator = Validator::make($request->all(),$rule);
-        if($validator->fails()) :
-            return redirect()->back()->withErrors($validator)->withInput();
-        else:
-            $tax = AboutDetails::create([
-                'country_id' =>$request->input('country_id'),
-                'state_id' =>$request->input('state_id'),
-                'tax'=>$request->input('tax')
-            ]);
-            if($tax):
-                return to_route('admin.attraction.list')->with('success','Carousel Created Successfully !');
-            else:
-                return redirect()->back()->with('error','Carousel Not created successfully');
+          // $rule = [
+        //     'ownerName'=>'required',
+        //     'Content'=>'required',
+        //     'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000'
+        // ];
+        // $validator = Validator::make($request->all(),$rule);
+        // if($validator->fails()) :
+        //     return redirect()->back()->withErrors($validator)->withInput();
+        // else:
+            // $status= Attraction::first();
+            if($request->hasfile('image')):
+                $path = storage_path('public/upload/attraction/');
+                if(file_exists($path.$request->input('old_image'))):
+                   unlink($path.$request->input('old_image'));
+                endif;
+                $image = $request->file('image');
+                $ext = "webp";
+                $thumbnail = Image::make($image->getRealPath())->resize(1000, 700, function ($constraint) {
+                    $constraint->aspectRatio();
+                     $constraint->upsize();
+                 })->encode($ext,100);
+                $originalImageName = uniqid().'.'.$ext;
+                $thumbnailPath = public_path('storage/uploads/attraction/');
+                $thumbnail->save($thumbnailPath . "" . $originalImageName);
+                $thumbnail->destroy();
+            endif ;
+            if($request->input('attr_id') ==null):
+                $data=new Attraction();
+                $data->property_id=$request->input('property_id');	
+                $data->admin_id= Auth::user()->id;
+                $data->image= $originalImageName;
+                $data->heading=$request->input('Attrheading');
+                $data->content= $request->input('AttrContent');
+                $data->save();
             endif;
-        endif;
-    }
-    public function edit($id) {
-        $countries = Country::get();
-        $states = State::get();
-        $data = Carousel::findOrFail(decrypt($id));
-        return view ('admin.attractions.edit',compact('countries','states','data'));
-    }
+                $data = Attraction::where('id',$request->input('attr_id'))->update([
+                    'admin_id' =>Auth::user()->id,
+                    'image' => empty($originalImageName)?$request->input('old_image'):$originalImageName,
+                    'heading' => $request->input('Attrheading'),
+                    'content'=> $request->input('AttrContent')
+                ]);
 
-    public function Update(Request $request) {
-        $rule = [
-            'country_id'=>'required',
-            'state_id' => 'required',
-            'tax'=>'required'
-        ];
-        $validator = Validator::make($request->all(),$rule);
-        if($validator->fails()) :
-            return redirect()->back()->withErrors($validator)->withInput();
-        else:
-            $tax = AboutDetails::where('id',decrypt($request->input('id')))->update([
-                'country_id' =>$request->input('country_id'),
-                'state_id' =>$request->input('state_id'),
-                'tax'=>$request->input('tax')
-            ]);
-            if($tax):
-                return to_route('admin.attraction.list')->with('success','About us Updated Successfully !');
-            else:
-                return redirect()->back()->with('error','About us Not Updated successfully');
-            endif;
-        endif;
+            if($data==null){
+                  return response()->json([
+                    'status'=>200,
+                    'msg' =>'Attraction us Created Successfully !'
+                 ]);
+            }elseif($data==!null){
+                 return response()->json([
+                     'status'=>200,
+                    'msg' =>'Attraction us Updated Successfully !'
+                ]);
+            }else{
+                return response()->json([
+                    'status'=>500,
+                    'msg' =>'Attraction us  Not created successfully !'
+                ]);
+            }
     }
-
     public function destroy(Request $request){
-        $result = AboutDetails::where('id',$request->input('id'))->delete();
+        $result = Attraction::where('id',$request->input('id'))->delete();
         if($result):
             return response()->json([
                 'status'=>200,
-                'message'=>'About us  Delete Successfully'
+                'message'=>'Attraction us  Delete Successfully'
             ]);
         else:
             return response()->json([
                 'status'=>500,
-                'message'=>'About us Not Delete, Please Try again',
+                'message'=>'Attraction us Not Delete, Please Try again',
             ]);
         endif;
 

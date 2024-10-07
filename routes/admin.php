@@ -60,7 +60,7 @@ Route::middleware(['back-prevent-history','auth'])->group(function () {
       //Attraction
     Route::controller(AttractionController::class)->prefix('attraction')->name('attraction.')->group(function(){
         Route::get('list','list')->name('list');
-        Route::get('create','create')->name('create');
+        Route::get('create/{id?}','create')->name('create');
         Route::post('store','store')->name('store');
         Route::get('edit/{id}','edit')->name('edit');
         Route::post('update','update')->name('update');

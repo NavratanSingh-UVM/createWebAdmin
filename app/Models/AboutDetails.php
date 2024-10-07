@@ -10,7 +10,7 @@ class AboutDetails extends Model
     use HasFactory;
     protected $table='about_details';
     protected $fillable = [
-        'about_id',
+        'id',
         'admin_id'
     ];
 }

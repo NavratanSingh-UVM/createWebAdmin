@@ -1,21 +1,20 @@
 @extends('admin.layouts.master')
 @push('title')
-    Create Tax
+    Create Attraction
 @endpush
 @section('content')
 <!--**********************************
             Content body start
         ***********************************-->
-        
+        <style>
+.ck-editor__editable_inline {
+    min-height: 200px;
+}
+</style>
         <div class="content-body">
             <div class="row page-titles mx-0">
                 <div class="col p-md-0">
                     @include('flash-message.flash-message')
-                    <div class="row">
-                        <div class="col-md-6"><h4 style="color:black">Create Tax</h4></div>
-                        <div class="col-md-6 text-right"><a href="{{ route('admin.tax.list') }}" class="btn mb-1 btn-primary float-right">Back <span class="btn-icon-right"><i class="fa fa-angle-double-left"></i></span>
-                        </a> </div>                                
-                    </div>
                 </div>
             </div>
             <!-- row -->
@@ -25,51 +24,63 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="form-validation">
-                                  <form class="form-valide" method="post" action="{{ route('admin.tax.store') }}">
+                                   <form   id="add-attraction-form" enctype="multipart/form-data">
                                         @csrf
-                                        <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val-username">Country Name<span class="text-danger">*</span>
+                                        <div class="col-lg-6">
+                                           <div class="form-group">
+                                               <label for="property-photo">Image<span class="text-danger">*</span></label>
+                                                <div class="custom-file">
+                                                 <input type="hidden" class="form-control" id="id" name="attr_id" value="{{ $data->id ?? '' }}">
+                                                   @if (!empty($data))
+                                                      <img src="{{ url('storage\uploads\attraction/' . $data->image) }}" alt="" srcset="" height="200" width="400">
+                                                      <input type="hidden" name="old_image" value="{{$data->image ?? ''}}">
+                                                   @else
+                                                    <img src="{{ url('storage\uploads\attraction/default.png')}}"  id="prev" alt="" srcset="" height="200" width="400">  
+                                                   @endif
+                                                    <input type="file" class="form-control"  id="attraction-photo"  name="image" accept=".png, .jpg, .jpeg, .jpg">
+                                                  
+                                                  <span class="image text-danger"></span>
+                                              </div>
+                                            </div>
+                                        </div>
+                                         <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-username">Attraction Property<span class="text-danger">*</span>
                                             </label>
-                                            <div class="col-lg-6">
-                                               {{-- <input type="hidden" class="form-control" id="tax_id" name="tax_id" value="{{$data->id ?? '' }}"> --}}
-                                                <select class="form-control" name="country_id">
-                                                    <option value="">Select Country</option>
-                                                    @foreach ($countries as $country)
-                                                        <option value="{{ $country->id }}" @selected(old('country_name')==$country->id)>{{ $country->name }}</option>
-                                                    @endforeach
+                                              <div class="col-lg-6">
+                                                <select class="form-control" name="property_id">
+                                                    <option value="">Select Property</option>
+                                                    {{-- @foreach ($countries as $country) --}}
+                                                        <option value="1">A</option>
+                                                        <option value="2">B</option>
+                                                        <option value="3">C</option>
+                                                        <option value="4">D</option>
+                                                        <option value="5">E</option>
+                                                        <option value="6">F</option>
+                                                    {{-- @endforeach --}}
                                                 </select>
                                                 @error('country_name')
                                                  <span class="text-danger">{{ $message }}</span>   
                                                 @enderror
-                                             
-                                              
-                                            </div>
-                                        </div>
-                                        
-                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val-username">State Name<span class="text-danger">*</span>
-                                            </label>
-                                            <div class="col-lg-6">
-                                                <select class="form-control" name="state_id">
-                                                    <option value="">Select State</option>
-                                                    @foreach ($states as $state)
-                                                        <option value="{{ $state->id }}"  @if (!empty($data)) @selected($state->id ===$data->state_id) @endif>{{ $state->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                                <span class="state_id text-danger"></span>  
-                                            </div>
-                                        </div>
-                                           <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="tax">Tax <span class="text-danger">*</span>
-                                            </label>
-                                            <div class="col-lg-6">
-                                                <input type="text" class="form-control" id="tax" name="tax" placeholder="Enter a tax.." value=" ">
-                                                <span class="tax text-danger"></span>  
                                             </div>
                                         </div>
                                         <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-username">Attraction Heading<span class="text-danger">*</span>
+                                            </label>
+                                             <div class="col-lg-6">
+                                                <input type="text" class="form-control" id="attractionHeading" name="Attrheading" placeholder="Heading" value="{{$data->heading ?? ''}} ">
+                                                <span class="tax text-danger"></span>  
+                                            </div>
+                                        </div>
+                                         <div class="col-md-12">
+                                        <div class="form-group">
+                                           <label for="description">Content</label>
+                                            <textarea class="form-control ck-editor__editable_inline" id="AttractionEditor" name="AttrContent"  rows="5" value="{{$data->content ?? ''}}"></textarea>
+                                            <span class="description text-danger"></span>
+                                        </div>
+                                    </div>
+                                        <div class="form-group row">
                                             <div class="col-lg-8 ml-auto">
-                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                                <button type="submit" class="btn btn-primary add-attraction-form" >Submit</button>
                                             </div>
                                         </div>
                                     </form>
@@ -84,4 +95,38 @@
         <!--**********************************
             Content body end
         ***********************************-->
+<script>
+      ClassicEditor
+    .create( document.querySelector( '#AttractionEditor' )
+    )
+    .catch( error => {
+        console.error( error );
+    } );
+</script>
+    <script>
+     var form = '#add-attraction-form';
+       $(form).on('submit', function(event){
+        event.preventDefault();
+        $.ajax({
+            url: "{{ route('admin.attraction.store')}}",
+            method: 'POST',
+            data: new FormData(this),
+            dataType: 'JSON',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success:function(res){  
+             if(res.status==200){
+                toastr.success(res.msg); 
+                window.location.href = 'http://127.0.0.1:8000/admin/attraction/list';
+               
+               }
+             },
+             error: function(res) {
+               }
+            
+        })
+    });
+    </script>
 @endsection
+ 
