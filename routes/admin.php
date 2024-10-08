@@ -33,7 +33,7 @@ Route::middleware(['back-prevent-history','auth'])->group(function () {
       //About-us
     Route::controller(AboutController::class)->prefix('about_us')->name('about_us.')->group(function(){
         Route::get('list','list')->name('list');
-        Route::get('create','create')->name('create');
+        Route::get('create/{id?}','create')->name('create');
         Route::post('store','store')->name('store');
         Route::get('edit/{id}','edit')->name('edit');
         Route::post('update','update')->name('update');
@@ -42,11 +42,46 @@ Route::middleware(['back-prevent-history','auth'])->group(function () {
        //Property listing
     Route::controller(PropertyListingController::class)->prefix('property')->name('property.')->group(function(){
         Route::get('list','list')->name('list');
-        Route::get('create','create')->name('create');
+        Route::get('create/{id?}','create')->name('create');
         Route::post('store','store')->name('store');
         Route::get('edit/{id}','edit')->name('edit');
         Route::post('update','update')->name('update');
         Route::post('delete','destroy')->name('delete');
+      
+        Route::post('store-step2','stepTwoStore')->name('step.two.store');
+        Route::post('property-rates-store','propertyRateStore')->name('property.rates.store');
+        Route::get('get-property-rates','getPropertyRates');
+        Route::post('store-rental-rates','rentalRatesStore');
+        Route::post('store-rental-rates','rentalRatesStore');
+        Route::post('store-gallery-image','galleryImageStore');
+        Route::post("location-info-store",'locationInfoStore');
+        Route::post("store-rental-policies",'rentalPolicyStore');
+        Route::post("calender-synchronization",'calenderSynchronization');
+        Route::get('get-reviews-rating','getReviewsRating');
+        Route::post('store-reviews-rating','storeReviewsRating');
+        Route::post('store-owner_information','storeOwnerInformation');
+        Route::post('get-rental-rates','getRentalRates');
+        Route::post('update-rental-rates','UpdateRentalRates');
+        Route::post('delete-rental-rates','deleteRentalRates');
+        Route::post('delete-property','deleteProperty')->name("delete.propert");
+        Route::post('property-approval','propertyApproval')->name("approval.property");
+        Route::post('property-feature','propertyFeature')->name("feature.property");
+        Route::post('reviews-rates-get-by-id','reviewsRatesGet');
+        Route::post('reviews-rating-update','reviewsRatingUpdate');
+        Route::post('reviews-rating-delete','reviewsRatingDelete');
+        Route::post('get-property-event','getPropertyEvent')->name('get.property.event');
+        Route::post('delete-property-image','deletePropertyImage');
+        Route::post('get-property-gallery-image','getPropertyGalleryImaage');
+        Route::post('update-gallery-image-order','updateGalleryImageOrder');
+        Route::post('block-manual-booking','blockManualBooking')->name('block.manual.booking');
+        Route::post('rate-manual-booking','rateManualBooking')->name('rate.manual.booking');
+        Route::post('un-block-manual-booking','unBlockManualBooking')->name('unblock.manual.booking');
+     });
+     Route::controller(LocationController::class)->prefix('location')->name('location.')->group(function () {
+         Route::post('get-state-by-country-id','getStateByCountryId');
+         Route::post('get-region-by-state-id','getRegionByStateId');
+         Route::post('get-city-by-region-id','getCityByRegionId');
+         Route::post('get-sub-city-by-city-id','getSubCityByCityId');
      });
       //IcalLink
       Route::controller(IcalLinkController::class)->prefix('icalLink')->name('icalLink.')->group(function(){

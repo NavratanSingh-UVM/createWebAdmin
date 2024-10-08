@@ -24,16 +24,21 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-bordered zero-configuration display nowrap" style="width:100%" id="property-list">
+                                    <table id="my-property-listing" class="table table-hover bg-white border rounded-lg" style="width: 100%">
                                         <thead>
-                                            <tr>
-                                                <th>Sr No.</th>
-                                                <th>Heading</th>
-                                                <th>Image</th>
-                                                <th>Type</th>
-                                                <th>Created Date</th>
-                                                <th>Action</th>
-                                            </tr>
+                                             <tr role="row">
+                                                 <th>Sr No.</th>
+                                                 <th>Property Id</th>
+                                                 <th>Property Name</th>
+                                                 {{-- <th>No Of Enquiries</th> --}}
+                                                 <th>Property Created On</th>
+                                                 {{-- <th>Created Date</th> --}}
+                                                 {{-- <th>Renewal Date</th> --}}
+                                                 {{-- <th>No Visitors</th> --}}
+                                                 <th>Photo</th>
+                                                 <th>Status</th>
+                                                 <th>Action</th>
+                                             </tr>
                                         </thead>
                                         <tbody>
                                         </tbody>
@@ -53,7 +58,7 @@
 @push('js')
 <script>
    $(function () {
-    var table = $('#property-list').DataTable({
+    var table = $('#my-property-listing').DataTable({
         "language": {
         "zeroRecords": "No record(s) found.",
          searchPlaceholder: "Search records"
@@ -69,16 +74,17 @@
        bStateSave: true,
        scrollX: true,
         ajax:{
-            url:"{{route('admin.user.management')}}",
+            url:"{{route('admin.property.list')}}",
         },
         dataType: 'html',
         columns: [
             {data: 'DT_RowIndex' ,name:'DT_RowIndex',searchable: false,orderable: false},
-            {data: 'heading', name: 'heading',orderable: false},
-            {data: 'image', name: 'image',orderable: false},
-            {data: 'type', name: 'type',orderable: false,defaultContent:919786123454},
-            {data: 'created_date', name: 'created_date',orderable: false},
+            {data: 'id', name: 'id',orderable: false},
+            {data: 'property_name', name: 'property_name',orderable: false},
+            {data: 'subscription_date', name: 'subscription_date',orderable: false,defaultContent:919786123454},
+            {data: 'property_main_photos', name: 'property_main_photos',orderable: false},
             {data: 'status', name: 'status',orderable: false},
+            {data: 'action', name: 'action', orderable: false, searchable: false},
         ],
     });
     $.fn.dataTable.ext.errMode = 'none';
@@ -98,27 +104,39 @@
     })
   });
 
-function userStatusChange(value,id){
-    showLoader();
-       $.ajax({
-        url: "{{ route('admin.change.user.status') }}",
-        type: 'POST',
-        dataType: "json",
-        data:{'id':id,"value":value,'_token': '{{ csrf_token()}}'},
-        cache:false,
-        success:function (res) {
-            hideLoader();
-            if(res.status=='1'){
-                toastr.success(res.msg)
-                setTimeout(function() {
-                    location.reload();
-                },500);
-            }else{
-                toastr.error(res.msg)
-            }
+ function propertyDelete(id){
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+            showLoader();
+            $.ajax({
+                url: "{{ route('admin.property.delete.propert') }}",
+                type: 'POST',
+                dataType: "json",
+                data:{'id':id,'_token': '{{ csrf_token()}}'},
+                cache:false,
+                success:function (res) {
+                    hideLoader();
+                    Swal.fire(
+                        'Confirmed!',
+                        res.msg,
+                        ).then((res)=>{
+                            setTimeout(function() {
+                                location.reload();
+                            },500);
+                    })
+                }
+            });
         }
     });
-}
+} 
 </script>
     
 @endpush

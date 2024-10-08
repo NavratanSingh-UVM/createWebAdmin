@@ -13,7 +13,7 @@ $(".nextBtn2").on('click',function() {
         return false;
     }else{
         $.ajax({
-            url:site_url+"/admin/property-listing/store-step2",
+            url:site_url+"/admin/property/store-step2",
             type:"POST",
             cache: false,
             data:{'property_id':$("input[name='property_listing_id']").val(),'sub_aminities_id':subAminitiesId},

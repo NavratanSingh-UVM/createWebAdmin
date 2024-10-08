@@ -20,11 +20,30 @@ class AttractionController extends Controller
             $attraction = Attraction::get();
             return Datatables::of($attraction)
                 ->addIndexColumn()
+                // ->filter(function ($instance) use ($request) {
+                //     if($request->get('property_id') != ''):
+                //         $instance->where('id', $request->get('property_id'));
+                //     elseif($request->get('email') != ''):
+                //         $user = User::where('email',$request->get('email'))->first();
+                //         $instance->where('user_id', $user->id);
+                //     elseif($request->get('name') != ''):
+                //         $user = User::where('name',$request->get('name'))->first();
+                //         $instance->where('user_id', $user->id);
+                //     endif;
+                // })
+               
+                ->editColumn('image',function($row) {
+                    return '<img src="'.url('storage/uploads/attraction/' . $row->image).'" class=" rounded-circle mr-3" height="50" width="50">';
+                })
+                ->editColumn('content',function($row) {
+                    return  $row->content;
+                  
+                })
                 ->addColumn('action', function($row){
                     $actionBtn = '<a href="'.route('admin.attraction.create',['id'=>encrypt($row->id)]).'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" onclick="attractionDelete('.$row->id.')">Delete</a>';
                     return $actionBtn;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['image','content','action'])
                 ->make(true);
         endif;
        return view("admin.attractions.index");
