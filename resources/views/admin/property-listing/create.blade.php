@@ -108,19 +108,19 @@
                   id="photo-tab" data-toggle="pill" data-number="5." href="#photo" role="tab"
                   aria-controls="photo" aria-selected="false"><span class="number">5.</span> Photos</a>
             </li>
-            <li class="nav-item col p-1">
+            {{-- <li class="nav-item col p-1">
                <a class="nav-link bg-transparent shadow-none font-weight-500 text-center lh-214 d-block"
                   id="rental-policies-tab" data-toggle="pill" data-number="6." href="#rental-policies"
                   role="tab" aria-controls="rental-policies" aria-selected="false"><span
                   class="number">6.</span> Rental Policies</a>
-            </li>
-            @if (!empty($propertyListing->id))
+            </li> --}}
+            {{-- @if (!empty($propertyListing->id)) --}}
                      <li class="nav-item col p-1">
                         <a class="nav-link bg-transparent shadow-none font-weight-500 text-center lh-214 d-block"
-                            id="calender-tab" data-toggle="pill" data-number="7." href="#calender" role="tab"
-                            aria-controls="calender" aria-selected="false"><span class="number">7.</span>Calender</a>
+                            id="calender-tab" data-toggle="pill" data-number="6." href="#calender" role="tab"
+                            aria-controls="calender" aria-selected="false"><span class="number">6.</span>Calender</a>
                      </li>
-           @endif
+           {{-- @endif --}}
          </ul>
          <div class="tab-content shadow-none p-0">
             <form id="listing_form">

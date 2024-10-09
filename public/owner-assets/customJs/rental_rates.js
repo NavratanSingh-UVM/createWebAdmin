@@ -1,4 +1,5 @@
 var ratesNotesDescription;
+var cancellationPolicy;
 let table;
 $(function() {
     ClassicEditor.create( document.querySelector( '#rates_notes' ) ).then( editor => {
@@ -6,6 +7,14 @@ $(function() {
     }).catch( error => {
         console.error( error );
     });
+
+ $(function() {
+        ClassicEditor.create( document.querySelector( '#cancellation_policy' ) ).then( editor => {
+           cancellationPolicy = editor;
+      }).catch( error => {
+        console.error( error );
+    });
+  });
      table = $('#property_rates').DataTable({
         "language": {
             "zeroRecords": "No record(s) found.",
@@ -24,7 +33,7 @@ $(function() {
         scrollX: true,
         "bLengthChange" : false,
         ajax:{
-            url:site_url+"/admin/property-listing/get-property-rates",
+            url:site_url+"/admin/property/get-property-rates",
             data:function(d){
                d.property_id =$("input[name='property_listing_id']").val()
             }
@@ -70,7 +79,7 @@ $(function() {
             'minimum_stay':$("input[name=minimum_stay]").val(),
         };
         $.ajax({
-            url:site_url+"/admin/property-listing/property-rates-store",
+            url:site_url+"/admin/property/property-rates-store",
             type:"POST",
             data:formData,
             success:function(res){
@@ -132,15 +141,13 @@ $(".rental_rates").on('click',function(e){
         "after_guest":$("select[name=after_guest]").val(),
         "poolheating_fee":$("input[name=poolheating_fee]").val(),
         "pool_heating_fees_perday":$("select[name=pool_heating_fees_perday]").val(),
-        "check_in":$("input[name=check_in]").val(),
-        "check_out":$("input[name=check_out]").val(),
         "tax_rates":$("input[name=tax_rates]").val(),
-        "change_over":$("select[name=change_over]").val(),
         "rates":$("select[name=all_rates_are_in]").val(),
         "rates_notes":ratesNotesDescription.getData(),
+        "cancellation_policy":cancellationPolicy.getData(),
     };
     $.ajax({
-        url:site_url+"/admin/property-listing/store-rental-rates",
+        url:site_url+"/admin/property/store-rental-rates",
         type:"POST",
         data:formData,
         success:function(res) {
@@ -180,7 +187,7 @@ function editRentalRates(id) {
         }
     });
     $.ajax({
-        url:site_url+"/admin/property-listing/get-rental-rates",
+        url:site_url+"/admin/property/get-rental-rates",
         type:"POST",
         data:{"id":id},
         cache:false,
@@ -206,7 +213,7 @@ $(".update_rental_rates").on('click',function() {
     showLoader();
     let formData = new FormData($("#update_rental_rates")[0]);
     $.ajax({
-        url:site_url+"/admin/property-listing/update-rental-rates",
+        url:site_url+"/admin/property/update-rental-rates",
         type:"POST",
         data:formData,
         cache:false,
@@ -245,7 +252,7 @@ function rentalRatesDelete(id) {
         if (result.isConfirmed) {
             showLoader();
             $.ajax({
-                url: site_url+"/admin/property-listing/delete-rental-rates",
+                url: site_url+"/admin/property/delete-rental-rates",
                 type: 'POST',
                 dataType: "json",
                 data:{'id':id},

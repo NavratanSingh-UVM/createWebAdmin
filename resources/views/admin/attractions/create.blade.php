@@ -49,14 +49,9 @@
                                               <div class="col-lg-6">
                                                 <select class="form-control" name="property_id">
                                                     <option value="">Select Property</option>
-                                                    {{-- @foreach ($countries as $country) --}}
-                                                        <option value="1">A</option>
-                                                        <option value="2">B</option>
-                                                        <option value="3">C</option>
-                                                        <option value="4">D</option>
-                                                        <option value="5">E</option>
-                                                        <option value="6">F</option>
-                                                    {{-- @endforeach --}}
+                                                    @foreach ($propertyList as $PropertyList)
+                                                      <option value="{{ $PropertyList->id }}" @if (!empty($data)) @selected($PropertyList->id == $data->property_id) @endif>{{ $PropertyList->property_name }}</option>
+                                                    @endforeach
                                                 </select>
                                                 @error('country_name')
                                                  <span class="text-danger">{{ $message }}</span>   
@@ -74,7 +69,7 @@
                                          <div class="col-md-12">
                                         <div class="form-group">
                                            <label for="description">Content</label>
-                                            <textarea class="form-control ck-editor__editable_inline" id="AttractionEditor" name="AttrContent"  rows="5" value="{{$data->content ?? ''}}"></textarea>
+                                            <textarea class="form-control ck-editor__editable_inline" id="AttractionEditor" name="AttrContent"  rows="5">{{$data->content ?? ''}}</textarea>
                                             <span class="description text-danger"></span>
                                         </div>
                                     </div>

@@ -9,15 +9,19 @@ use App\Models\State;
 use App\Models\Attraction;
 use DataTables;
 use App\Models\SubAminities;
+use App\Models\PropertyType;
+use App\Models\PropertyListing;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use App\Http\Helper\Helper;
 
 class AttractionController extends Controller
 {
     public function list(Request $request){
         if($request->ajax()):
-            $attraction = Attraction::get();
+            
+            $attraction = Attraction::latest()->with('propertyName');
             return Datatables::of($attraction)
                 ->addIndexColumn()
                 // ->filter(function ($instance) use ($request) {
@@ -35,6 +39,9 @@ class AttractionController extends Controller
                 ->editColumn('image',function($row) {
                     return '<img src="'.url('storage/uploads/attraction/' . $row->image).'" class=" rounded-circle mr-3" height="50" width="50">';
                 })
+                ->editColumn('property_type',function($row){
+                    return $row->propertyName->property_name;
+                })
                 ->editColumn('content',function($row) {
                     return  $row->content;
                   
@@ -43,19 +50,19 @@ class AttractionController extends Controller
                     $actionBtn = '<a href="'.route('admin.attraction.create',['id'=>encrypt($row->id)]).'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" onclick="attractionDelete('.$row->id.')">Delete</a>';
                     return $actionBtn;
                 })
-                ->rawColumns(['image','content','action'])
+                ->rawColumns(['image','property_type','content','action'])
                 ->make(true);
         endif;
        return view("admin.attractions.index");
     }
     public function create($propert_id=null){
-        // $propertyTypes = PropertyType::get();
+         $propertyList = PropertyListing::get();
         $data = "";
         if(!is_null($propert_id)){
             $data = Attraction::where("id",decrypt($propert_id))->first();
-         return view("admin.attractions.create",compact('data'));
+         return view("admin.attractions.create",compact('data','propertyList'));
         }
-            return view("admin.attractions.create",compact('data'));
+            return view("admin.attractions.create",compact('data','propertyList'));
         
     }
     public function store(Request $request){
@@ -104,17 +111,17 @@ class AttractionController extends Controller
             if($data==null){
                   return response()->json([
                     'status'=>200,
-                    'msg' =>'Attraction us Created Successfully !'
+                    'msg' =>'Attraction  Created Successfully !'
                  ]);
             }elseif($data==!null){
                  return response()->json([
                      'status'=>200,
-                    'msg' =>'Attraction us Updated Successfully !'
+                    'msg' =>'Attraction  Updated Successfully !'
                 ]);
             }else{
                 return response()->json([
                     'status'=>500,
-                    'msg' =>'Attraction us  Not created successfully !'
+                    'msg' =>'Attraction  Not created successfully !'
                 ]);
             }
     }
@@ -123,12 +130,12 @@ class AttractionController extends Controller
         if($result):
             return response()->json([
                 'status'=>200,
-                'message'=>'Attraction us  Delete Successfully'
+                'message'=>'Attraction  Delete Successfully'
             ]);
         else:
             return response()->json([
                 'status'=>500,
-                'message'=>'Attraction us Not Delete, Please Try again',
+                'message'=>'Attraction  Not Delete, Please Try again',
             ]);
         endif;
 

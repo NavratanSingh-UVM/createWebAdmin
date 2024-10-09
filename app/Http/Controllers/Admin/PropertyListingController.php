@@ -15,6 +15,8 @@ use App\Models\Country;
 use App\Models\Currency;
 use App\Models\MainAminity;
 use App\Models\PropertyType;
+use App\Models\PropertyGallery;
+use App\Models\ImportIcal;
 use App\Models\SubAminities;
 use App\Models\PropertyListing;
 use App\Models\PropertiesAminites;
@@ -23,7 +25,7 @@ use App\Http\Requests\PropertyListing\PropertyRatesRequest;
 use App\Http\Requests\PropertyListing\PropertyListingRequestStepOne;
 use App\Http\Requests\PropertyListing\PropertyListingRequestStepThree;
 use Illuminate\Support\Facades\Auth;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\Facades\Image as Image;
 use App\Http\Helper\Helper;
 use Validator;
 
@@ -34,7 +36,7 @@ class PropertyListingController extends Controller
    
     public function list(Request $request){
         if($request->ajax()):
-            $propertyListing = PropertyListing::where('user_id',Auth::user()->id)->latest()->with('region','city','sub_city');
+            $propertyListing = PropertyListing::where('user_id',Auth::user()->id)->latest();
             return Datatables::of($propertyListing)
                 ->addIndexColumn()
                 ->filter(function ($instance) use ($request) {
@@ -75,23 +77,12 @@ class PropertyListingController extends Controller
     }
     public function create($propert_id=null){
         $propertyTypes = PropertyType::get();
-        $countries = Country::get();
         $mainAminity = MainAminity::with('subAminities')->get();
-        $currencies = Currency::get();
-        // $cancelletionPolicies = CancellentionPolicy::get();
         $propertyListing = "";
-        $states="";
-        $regions="";
-        $cities="";
-        $sub_cities="";
         if(!is_null($propert_id)){
-            $propertyListing = PropertyListing::where("id",decrypt($propert_id))->first();
-            $states = State::where('country_id',$propertyListing->country_id)->get();
-            $regions = Region::where('state_id',$propertyListing->state_id)->get();
-            $cities = City::where('region_id',$propertyListing->region_id)->get();
-            $sub_cities = Cities::where('city_id',$propertyListing->city_id)->get();
+            $propertyListing = PropertyListing::where("id",base64_decode($propert_id))->first();
         }
-            return view('admin.property-listing.create',compact('propertyTypes','countries','mainAminity','currencies','propertyListing','states','regions','cities','sub_cities'));
+            return view('admin.property-listing.create',compact('propertyTypes','mainAminity','propertyListing'));
     }
      
     public function store(PropertyListingRequestStepOne $request){
@@ -130,15 +121,9 @@ class PropertyListingController extends Controller
                'avg_rate_unit' => $avgNights[1].' '.$avgNights[2],
                'baths' => $request->input('baths'),
                'description' => $request->input('description'),
-               'country_id' => $request->input('country'),
-               'state_id' => $request->input('state'),
-               'region_id' => $request->input('region'),
-               'city_id' => $request->input('city'),
-               'sub_city_id' => $request->input('sub_city') !=null?$request->input('sub_city'):NULL,
                'address' => $request->input('address'),
                'town' => $request->input('town'),
                'zip_code' => $request->input('zipcode')
-            //    'youtube_video_link'=>$request->input('youtube_video_link')
            
            ]);
        else:
@@ -154,15 +139,9 @@ class PropertyListingController extends Controller
                'avg_rate_unit' => $avgNights[1].' '.$avgNights[2],
                'baths' => $request->input('baths'),
                'description' => $request->input('description'),
-               'country_id' => $request->input('country'),
-               'state_id' => $request->input('state'),
-               'region_id' => $request->input('region'),
-               'city_id' => $request->input('city'),
-               'sub_city_id' => $request->input('sub_city') !=null?$request->input('sub_city'):NULL,
                'address' => $request->input('address'),
                'town' => $request->input('town'),
                'zip_code' => $request->input('zipcode')
-            //    'youtube_video_link'=>$request->input('youtube_video_link')
            ]);
        endif;
        if($propertyListing):
@@ -179,7 +158,6 @@ class PropertyListingController extends Controller
     }
 
     public function stepTwoStore(Request $request) {
-        //  dd($request->all());
           $properties_aminities = PropertiesAminites::where("property_id",$request->input('property_id'))->get();
           if( $properties_aminities->count() >0):
               $properties_aminities->each->delete();
@@ -202,10 +180,9 @@ class PropertyListingController extends Controller
                   'status'=>'0',
               ]);
           endif;
-      }
-  
-  
-      public function propertyRateStore(PropertyRatesRequest $request) {
+    }
+
+    public function propertyRateStore(PropertyRatesRequest $request) {
           $checkDates = PropertyRates::where('from_date','<=',Carbon::parse($request->input('from_date'))->format('Y-m-d'))->where('to_date','>=',Carbon::parse($request->input('to_date'))->format('Y-m-d'))->first();
           if($checkDates !=null)
           return response()->json(['status'=>0,'msg'=>"Already avaialble rate this duration"]);
@@ -227,9 +204,9 @@ class PropertyListingController extends Controller
               'status'=>'0'
           ]);
          endif;
-      }
+    }
   
-      public function getPropertyRates(Request $request) {
+    public function getPropertyRates(Request $request) {
           if($request->ajax()):
               $propertyRates =[];
               if($request->input("property_id") !=""):
@@ -244,9 +221,9 @@ class PropertyListingController extends Controller
                   ->rawColumns(['action',])
                   ->make(true);
           endif;
-      }
+    }
   
-      public function rentalRatesStore(PropertyListingRequestStepThree $request) {
+    public function rentalRatesStore(PropertyListingRequestStepThree $request) {
          $propertyListing = PropertyListing::where('id',$request->input('property_listing_id'))->update([
               'admin_fees' =>$request->input("admin_fees"),
               'cleaning_fees' =>$request->input("cleaning_fees"),
@@ -258,12 +235,10 @@ class PropertyListingController extends Controller
               'after_guest' =>$request->input("after_guest"),
               'poolheating_fee' =>$request->input("poolheating_fee"),
               'pool_heating_fees_perday' =>$request->input("pool_heating_fees_perday"),
-              'check_in' =>$request->input("check_in"),
-              'check_out' =>$request->input("check_out"),
               'tax_rates' =>$request->input("tax_rates"),
-              'change_over' =>$request->input("change_over"),
-              'currency_id'=>$request->input("rates"),
+            //   'currency_id'=>$request->input("rates"),
               'rates_notes'=>$request->input("rates_notes"),
+              'cancellation_policies'=>$request->input("cancellation_policy"),
          ]);
          if($propertyListing):
               return response()->json([
@@ -276,9 +251,9 @@ class PropertyListingController extends Controller
               ]);
          endif;
   
-      }
+    }
   
-      public function rentalPolicyStore(Request $request){
+    public function rentalPolicyStore(Request $request){
   
           $check_create =PropertyListing::where('id',$request->input('property_listing_id'))->pluck('cancelletion_policies_id')->first();
           $file_name = "";
@@ -318,8 +293,9 @@ class PropertyListingController extends Controller
               ]);
           }
   
-      }
-      public function locationInfoStore(Request $request) {
+    }
+
+    public function locationInfoStore(Request $request) {
           $propertyListing = PropertyListing::where('id',$request->input('property_listing_id'))->update([
               'location'=>$request->input("location"),
               'iframe_link_google'=>$request->input("iframe_link_google"),
@@ -336,33 +312,44 @@ class PropertyListingController extends Controller
                   'status'=>'0'
               ]);
           endif;
-      }
+    }
   
-      public function galleryImageStore(Request $request){
-       $validator = Validator::make($request->all(), [
-              'files.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:8192',
-          ]);
+    public function galleryImageStore(Request $request){
+      
+        // $validator = Validator::make($request->all(), [
+        //        'files.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:8192',
+        //     ]);
           
-          if ($validator->fails()) {
-              return response()->json([ 
-                   'status'=>'500',
-                  'msg'=>"image is very larg"
-               ],500);
-           }
+        //     if ($validator->fails()) {
+        //         return response()->json([ 
+        //              'status'=>'500',
+        //             'msg'=>"image is very larg"
+        //          ],500);
+        //      }
+        $request->validate([
+            'files.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:8192',
+        ]);
          $propertyListing ='';
           if($request->TotalFiles > 0){
+          
             for($x = 0; $x < $request->TotalFiles; $x++){
                  if ($request->hasFile('files'.$x)){
                        $image = $request->file('files'.$x);
                         $ext = "webp";
-                       $thumbnail = Image::make($image->getRealPath())->resize(1000, 700, function ($constraint) {
+                       $thumbnail = Image::make($image->getRealPath())->resize(300, 300, function ($constraint) {
                           $constraint->aspectRatio();
                            $constraint->upsize();
                        })->encode($ext,100);
                       $originalImageName = uniqid().'.'.$ext;
+                     
                       $thumbnailPath = public_path('storage/upload/property_image/gallery_image/');
+                      if (!file_exists($thumbnailPath)) {
+                        mkdir($thumbnailPath, 0777, true);
+                    }
                       $thumbnail->save($thumbnailPath . "" . $originalImageName);
+                     
                       $thumbnail->destroy();
+                     
                       $propertyListing = PropertyGallery::create([
                           "property_id"=>$request->input("property_listing_id"),
                           "image_name"=>$originalImageName
@@ -381,9 +368,9 @@ class PropertyListingController extends Controller
               ]);
           endif;
       
-      }
+    }
   
-      public function calenderSynchronization(Request $request) {
+    public function calenderSynchronization(Request $request) {
           try{
               $ical_response = @file_get_contents($request->input('import_calender_url'));
               $icsDates = array ();
@@ -856,72 +843,5 @@ class PropertyListingController extends Controller
           endif;
         
     }
-    // public function store(Request $request){
-    //     $rule = [
-    //         'country_id'=>'required',
-    //         'state_id'=>'required',
-    //         'tax'=>'required'
-    //     ];
-    //     $validator = Validator::make($request->all(),$rule);
-    //     if($validator->fails()) :
-    //         return redirect()->back()->withErrors($validator)->withInput();
-    //     else:
-    //         $tax = AboutDetails::create([
-    //             'country_id' =>$request->input('country_id'),
-    //             'state_id' =>$request->input('state_id'),
-    //             'tax'=>$request->input('tax')
-    //         ]);
-    //         if($tax):
-    //             return to_route('admin.property.list')->with('success','Carousel Created Successfully !');
-    //         else:
-    //             return redirect()->back()->with('error','Carousel Not created successfully');
-    //         endif;
-    //     endif;
-    // }
-    // public function edit($id) {
-    //     $countries = Country::get();
-    //     $states = State::get();
-    //     $data = Carousel::findOrFail(decrypt($id));
-    //     return view ('admin.property-listing.edit',compact('countries','states','data'));
-    // }
-
-    // public function Update(Request $request) {
-    //     $rule = [
-    //         'country_id'=>'required',
-    //         'state_id' => 'required',
-    //         'tax'=>'required'
-    //     ];
-    //     $validator = Validator::make($request->all(),$rule);
-    //     if($validator->fails()) :
-    //         return redirect()->back()->withErrors($validator)->withInput();
-    //     else:
-    //         $tax = AboutDetails::where('id',decrypt($request->input('id')))->update([
-    //             'country_id' =>$request->input('country_id'),
-    //             'state_id' =>$request->input('state_id'),
-    //             'tax'=>$request->input('tax')
-    //         ]);
-    //         if($tax):
-    //             return to_route('admin.property.list')->with('success','About us Updated Successfully !');
-    //         else:
-    //             return redirect()->back()->with('error','About us Not Updated successfully');
-    //         endif;
-    //     endif;
-    // }
-
-    // public function destroy(Request $request){
-    //     $result = AboutDetails::where('id',$request->input('id'))->delete();
-    //     if($result):
-    //         return response()->json([
-    //             'status'=>200,
-    //             'message'=>'About us  Delete Successfully'
-    //         ]);
-    //     else:
-    //         return response()->json([
-    //             'status'=>500,
-    //             'message'=>'About us Not Delete, Please Try again',
-    //         ]);
-    //     endif;
-
-    // }
 }
 

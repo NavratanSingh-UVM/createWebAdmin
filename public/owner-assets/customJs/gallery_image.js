@@ -58,7 +58,7 @@ $(".upload_gellery_image").on("click",async function(e) {
 		formData.append("files"+i, images[i].file);
 	}
 	const response = await fetch(
-		site_url+"/admin/property-listing/store-gallery-image",
+		site_url+"/admin/property/store-gallery-image",
 		{
 			method: "POST",
 			headers: {
@@ -131,7 +131,7 @@ $(".upload_gellery_image").on("click",async function(e) {
 async function deleteImage(properyId,imageId) {
 	showLoader();
     try {
-        const response = await fetch(site_url+"/admin/property-listing/delete-property-image",{
+        const response = await fetch(site_url+"/admin/property/delete-property-image",{
             method:"POST",
             body:JSON.stringify({"id":imageId}),
             headers: {
@@ -166,7 +166,7 @@ async function deleteImage(properyId,imageId) {
 showImage = async (property_id)=>{
     showLoader();
     try {
-        const response = await fetch(site_url+"/admin/property-listing/get-property-gallery-image",{
+        const response = await fetch(site_url+"/admin/property/get-property-gallery-image",{
             method:"POST",
             body:JSON.stringify({"property_id":property_id}),
             headers: {
@@ -222,7 +222,7 @@ $(function () {
             });
 			// console.log(picsOrder);
             $.ajax({
-                url:site_url+"/admin/property-listing/update-gallery-image-order",
+                url:site_url+"/admin/property/update-gallery-image-order",
                 type:"POST",
                 data:{"picsOrder":picsOrder,"property_id":property_id},
                 success:function(data){

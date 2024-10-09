@@ -169,8 +169,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+         'Intervention\Image\ImageServiceProvider'
         
     ])->toArray(),
 
@@ -188,7 +188,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
-        'Image' => Intervention\Image\Facades\Image::class,
+         'Image' => 'Intervention\Image\Facades\Image',
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ])->toArray(),
 

@@ -52,7 +52,7 @@ $(".upload_gellery_image").on("click", function() {
     });
     $.ajax({
         type: 'POST',
-        url: site_url + "/admin/property-listing/store-gallery-image",
+        url: site_url + "/admin/property/store-gallery-image",
         data: formData,
         cache: false,
         contentType: false,

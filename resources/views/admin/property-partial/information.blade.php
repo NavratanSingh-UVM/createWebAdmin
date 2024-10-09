@@ -73,13 +73,8 @@
                                         <div class="form-group">
                                             <label for="sleeps">Sleeps</label>
                                             <div class="form-row">
-                                                <!--<div class="col-6">-->
                                                     <input type="text" name="sleeps1" class="form-control" placeholder="Sleeps" id="sleeps" value="{{ $propertyListing->sleeps ?? '' }}">
                                                 </div>
-                                                <!--<div class="col-6">-->
-                                                <!--    <input type="text" name="sleeps2" class="form-control" placeholder="sleeps" id="sleeps">-->
-                                                <!--</div>-->
-                                            <!--</div>-->
                                             <span class="sleeps text-danger"></span>
                                         </div>
                                     </div>
@@ -121,84 +116,6 @@
                                             <label for="description">Description</label>
                                             <textarea class="form-control h-150px" rows="6" id="property_description" name="description">{{ $propertyListing->description ?? '' }}</textarea>
                                             <span class="description text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="property_location">Country</label>
-                                            <select class="form-control  select" name="country_name" id="country_name" onchange="getStateByCountryId(this.value)">
-                                                <option value="">Select Country</option>
-                                                @foreach ($countries as $country)
-                                                    <option value="{{ $country->id }}"
-                                                        @if (!empty($propertyListing)) @selected($country->id === $propertyListing->country_id) @endif>
-                                                        {{ $country->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            <span class="country text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="state_name">State</label>
-                                            <select class="form-control  select" name="state" id="state_name" onchange="getRegionByStateId(this.value)">
-                                                <option value="">Select State</option>
-                                                @if (!empty($states))
-                                                    @foreach ($states as $state)
-                                                        <option value="{{ $state->id }}"
-                                                            @if (!empty($propertyListing)) @selected($state->id === $propertyListing->state_id) @endif>
-                                                            {{ $state->name }}</option>
-                                                    @endforeach
-                                                @endif
-                                            </select>
-                                            <span class="state text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="region_name">Region</label>
-                                            <select class="form-control  select" name="region_name" id="region_name" onchange="getCityByRegionId(this.value)">
-                                                <option value="">Select Region</option>
-                                                @if (!empty($regions))
-                                                    @foreach ($regions as $region)
-                                                        <option value="{{ $region->id }}"
-                                                            @if (!empty($propertyListing)) @selected($region->id === $propertyListing->region_id) @endif>
-                                                            {{ $region->name }}</option>
-                                                    @endforeach
-                                                @endif
-                                            </select>
-                                            <span class="region text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="city_name">City</label>
-                                            <select class="form-control select" name="city_name" id="city_name" onchange="getSubCityByCityId(this.value)">
-                                                <option value="">Select city</option>
-                                                @if (!empty($cities))
-                                                    @foreach ($cities as $city)
-                                                        <option value="{{ $city->id }}"
-                                                            @if (!empty($propertyListing)) @selected($city->id === $propertyListing->city_id) @endif>
-                                                            {{ $city->name }}</option>
-                                                    @endforeach
-                                                @endif
-                                            </select>
-                                            <span class="city text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="sub_city_name">Sub City</label>
-                                            <select class="form-control select" name="sub_city" id="sub_city_name">
-                                                <option value="">Select sub city</option>
-                                                @if (!empty($sub_cities))
-                                                    @foreach ($sub_cities as $sub_city)
-                                                        <option value="{{ $sub_city->id }}"
-                                                            @if (!empty($propertyListing)) @selected($sub_city->id === $propertyListing->sub_city_id) @endif>
-                                                            {{ $sub_city->name }}</option>
-                                                    @endforeach
-                                                @endif
-                                            </select>
-                                            <span class="sub_city text-danger"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">

@@ -12,7 +12,7 @@
         "fruitcake/php-cors": "1.2",
         "guzzlehttp/guzzle": "^7.9",
         "iatstuti/laravel-cascade-soft-deletes": "4.3.*",
-        "intervention/image": "^2.7",
+        "intervention/image": "^2.3",
         "laravel/framework": "^10.10",
         "laravel/passport": "^11.8",
         "laravel/sanctum": "^3.2",

@@ -38,8 +38,8 @@ Route::middleware(['back-prevent-history','auth'])->group(function () {
         Route::get('edit/{id}','edit')->name('edit');
         Route::post('update','update')->name('update');
         Route::post('delete','destroy')->name('delete');
-     });
-       //Property listing
+    });
+    //Property listing
     Route::controller(PropertyListingController::class)->prefix('property')->name('property.')->group(function(){
         Route::get('list','list')->name('list');
         Route::get('create/{id?}','create')->name('create');
@@ -47,15 +47,13 @@ Route::middleware(['back-prevent-history','auth'])->group(function () {
         Route::get('edit/{id}','edit')->name('edit');
         Route::post('update','update')->name('update');
         Route::post('delete','destroy')->name('delete');
-      
         Route::post('store-step2','stepTwoStore')->name('step.two.store');
         Route::post('property-rates-store','propertyRateStore')->name('property.rates.store');
         Route::get('get-property-rates','getPropertyRates');
         Route::post('store-rental-rates','rentalRatesStore');
-        Route::post('store-rental-rates','rentalRatesStore');
         Route::post('store-gallery-image','galleryImageStore');
         Route::post("location-info-store",'locationInfoStore');
-        Route::post("store-rental-policies",'rentalPolicyStore');
+        // Route::post("store-rental-policies",'rentalPolicyStore');
         Route::post("calender-synchronization",'calenderSynchronization');
         Route::get('get-reviews-rating','getReviewsRating');
         Route::post('store-reviews-rating','storeReviewsRating');
@@ -76,12 +74,6 @@ Route::middleware(['back-prevent-history','auth'])->group(function () {
         Route::post('block-manual-booking','blockManualBooking')->name('block.manual.booking');
         Route::post('rate-manual-booking','rateManualBooking')->name('rate.manual.booking');
         Route::post('un-block-manual-booking','unBlockManualBooking')->name('unblock.manual.booking');
-     });
-     Route::controller(LocationController::class)->prefix('location')->name('location.')->group(function () {
-         Route::post('get-state-by-country-id','getStateByCountryId');
-         Route::post('get-region-by-state-id','getRegionByStateId');
-         Route::post('get-city-by-region-id','getCityByRegionId');
-         Route::post('get-sub-city-by-city-id','getSubCityByCityId');
      });
       //IcalLink
       Route::controller(IcalLinkController::class)->prefix('icalLink')->name('icalLink.')->group(function(){

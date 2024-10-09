@@ -91,20 +91,6 @@
                                             <span class="after text-danger"></span>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="check_in">Check In</label>
-                                            <input type="time" name="check_in" class="form-control" id="check_in" placeholder="Pool Heating fess" value="{{ $propertyListing->check_in ?? '' }}">
-                                            <span class="check_in text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="check_out">Check Out</label>
-                                            <input type="time" name="check_out" class="form-control" id="check_out" placeholder="Pool Heating fess" value="{{ $propertyListing->check_out ?? '' }}">
-                                            <span class="check_out text-danger"></span>
-                                        </div>
-                                    </div>
                                  @if(!empty($tax->tax))
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -114,7 +100,7 @@
                                         </div>
                                     </div>
                                   @endif 
-                                    <div class="col-md-3">
+                                    {{-- <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="change_over">Change-Over</label><br>
                                             <select name="change_over" id="change_over" class="form-control" style="width: 100%">
@@ -129,8 +115,8 @@
                                             </select>
                                             <span class="change_over text-danger"></span>
                                         </div>
-                                    </div>
-                                    <div class="col-md-3">
+                                    </div> --}}
+                                    {{-- <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="all_rates_are_in">All Rates are in</label><br>
                                             <select name="all_rates_are_in" id="all_rates_are_in" class="form-control" style="width: 100%">
@@ -141,12 +127,18 @@
                                             </select>
                                             <span class="all_rates_are_in text-danger"></span>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-md-6"></div>
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="rates_notes">Rates Notes</label>
                                             <textarea class="form-control h-150px" rows="6" id="rates_notes" name="rates_notes">@if (!empty($propertyListing)){{ $propertyListing->rates_notes }} @endif</textarea>
+                                        </div>
+                                    </div>
+                                     <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="rates_notes">Cancellation policy</label>
+                                            <textarea class="form-control h-150px" rows="6" id="cancellation_policy" name="cancellation_policy">@if (!empty($propertyListing)){{ $propertyListing->cancellation_policies }} @endif</textarea>
                                         </div>
                                     </div>
                                 </div>

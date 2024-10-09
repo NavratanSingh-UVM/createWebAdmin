@@ -87,7 +87,7 @@ $(".craete_property").on("click",function(e) {
     e.preventDefault();
     toastr.success("Property Update Successfully !")
     window.setTimeout(() => {
-        window.location.href=site_url+"/owner/my-property-listing"; 
+        window.location.href=site_url+"/admin/property/list"; 
      }, 2000);
 })
 
