@@ -14,7 +14,4 @@ class Attraction extends Model
         'id',
         'admin_id'
     ];
-    public function propertyName() {
-        return $this->belongsTo(PropertyListing::class,'property_id','id');
-    }
 }

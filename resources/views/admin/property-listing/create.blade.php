@@ -114,13 +114,13 @@
                   role="tab" aria-controls="rental-policies" aria-selected="false"><span
                   class="number">6.</span> Rental Policies</a>
             </li> --}}
-            {{-- @if (!empty($propertyListing->id)) --}}
-                     <li class="nav-item col p-1">
-                        <a class="nav-link bg-transparent shadow-none font-weight-500 text-center lh-214 d-block"
+            @if (!empty($propertyListing->id))
+                  <li class="nav-item col p-1">
+                     <a class="nav-link bg-transparent shadow-none font-weight-500 text-center lh-214 d-block"
                             id="calender-tab" data-toggle="pill" data-number="6." href="#calender" role="tab"
                             aria-controls="calender" aria-selected="false"><span class="number">6.</span>Calender</a>
-                     </li>
-           {{-- @endif --}}
+                  </li>
+           @endif
          </ul>
          <div class="tab-content shadow-none p-0">
             <form id="listing_form">
@@ -138,8 +138,8 @@
                </div>
             </form>
          </div>
-         {{-- Rental Rates Update Model start  --}}
-         <div class="modal fade" id="rental_rates_edit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+           {{-- Rental Rates Update Model start  --}}
+           <div class="modal fade" id="rental_rates_edit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog  modal-lg" role="document">
                <div class="modal-content">
                   <div class="modal-header">
@@ -194,7 +194,7 @@
                   </div>
                </div>
             </div>
-         </div>
+           </div>
          {{-- Rental Rates Update Model end  --}}
          {{-- Riviews Rating Model Start --}}
          <div class="modal fade" id="revies_rating" tabindex="-1" role="dialog"
@@ -450,7 +450,7 @@
 <script src="{{ asset('owner-assets/js/map.js') }}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_KEY') }}&libraries=places&callback=initialize" async defer></script>
 
-{{-- <script>
+<script>
    $(document).ready(function(){
        ratesIsAvailable = {!!App\Http\Helper\Helper::getPropertyRatesWhichDate($propertyListing->id??"")!!};  
        $('#start_date').datepicker({ 
@@ -528,7 +528,7 @@
        try{
            showLoader();
            e.preventDefault();
-           const response = await fetch("{{route('admin.property.listing.block.manual.booking')}}",{
+           const response = await fetch("{{route('admin.property.block.manual.booking')}}",{
                method:"POST",
                body: new FormData(createManualBookings),
                processData: false,
@@ -568,7 +568,7 @@
             block_calender_id:$("#block_calender_id").val(),
           }
            $.ajax({
-                   url:"{{route('admin.property.listing.unblock.manual.booking')}}",
+                   url:"{{route('admin.property.unblock.manual.booking')}}",
                    method:"POST",
                    data:formData,
                     success:function(response) 
@@ -605,7 +605,7 @@
            e.preventDefault();
              var formData = new FormData(createManualRating);
               formData.append("rate_property_id",rate_property_id);
-           const response = await fetch("{{route('admin.property.listing.rate.manual.booking')}}",{
+           const response = await fetch("{{route('admin.property.rate.manual.booking')}}",{
                method:"POST",
                body: formData,
                processData: false,
@@ -725,5 +725,5 @@
        });
        getEvent();
    // })
-</script> --}}
+</script>
 @endpush

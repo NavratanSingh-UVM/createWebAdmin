@@ -175,6 +175,14 @@ showImage = async (property_id)=>{
             }
         })
         const results = await response.json();
+        if(response.status==2){
+            hideLoader();
+            toastr.success(response.msg);
+            toastr.success("Property Create Successfully !")
+            window.setTimeout(() => {
+                window.location.href=site_url+"/admin/property/list"; 
+             }, 2000);
+         }
         if(response.status==500){
             hideLoader();
             toastr.error(response.statusText);
@@ -192,6 +200,7 @@ showImage = async (property_id)=>{
                 <span class="position-absolute" onclick=deleteImage(${results.data[index].property_id},${results.data[index].id})>&times;</span>
                 </div>` 
             }
+        
             
             hideLoader();
             return img;
@@ -208,27 +217,27 @@ $(function () {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-    $('#container').sortable({
-        containment: "parent",
-        tolerance: 'pointer',
-        helper: 'clone',
-        update: function (event, ui) {
-            var property_id = $("input[name=property_listing_id]").val();
-            var picsOrder = {};
-            picsOrder = $(this).sortable('toArray');
-            $('.image_container ').each(function () {
-                $(this).removeClass('thbSel');
-                $('#' + picsOrder[0]).addClass('thbSel');
-            });
-			// console.log(picsOrder);
-            $.ajax({
-                url:site_url+"/admin/property/update-gallery-image-order",
-                type:"POST",
-                data:{"picsOrder":picsOrder,"property_id":property_id},
-                success:function(data){
-                    console.log(data);
-                }
-            });
-        }
-    });
+    // $('#container').sortable({
+    //     containment: "parent",
+    //     tolerance: 'pointer',
+    //     helper: 'clone',
+    //     update: function (event, ui) {
+    //         var property_id = $("input[name=property_listing_id]").val();
+    //         var picsOrder = {};
+    //         picsOrder = $(this).sortable('toArray');
+    //         $('.image_container ').each(function () {
+    //             $(this).removeClass('thbSel');
+    //             $('#' + picsOrder[0]).addClass('thbSel');
+    //         });
+	// 		// console.log(picsOrder);
+    //         $.ajax({
+    //             url:site_url+"/admin/property/update-gallery-image-order",
+    //             type:"POST",
+    //             data:{"picsOrder":picsOrder,"property_id":property_id},
+    //             success:function(data){
+    //                 console.log(data);
+    //             }
+    //         });
+    //     }
+    // });
 });

@@ -1,7 +1,7 @@
 function getEvent() {
     try {
         $.ajax({
-            url: site_url+"/admin/property-listing/get-property-event",
+            url: site_url+"/admin/property/get-property-event",
             method: "POST",
             processData: false,
             headers: {
@@ -81,7 +81,7 @@ $(".sync_now").on("click",function () {
 	});
     $.ajax({
 		type:'POST',
-		url: site_url+"/admin/property-listing/calender-synchronization",
+		url: site_url+"/admin/property/calender-synchronization",
 		data: formData,
 		cache:false,
 		dataType: 'json',

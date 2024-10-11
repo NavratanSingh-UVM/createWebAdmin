@@ -28,11 +28,9 @@
                                         <thead>
                                             <tr>
                                                 <th>Sr No.</th>
-                                                <th>Property Name</th>
                                                 <th>Image</th>
                                                 <th>Heading</th>
                                                 <th>Content</th>
-                                                {{-- <th>Status</th> --}}
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -75,7 +73,6 @@
         dataType: 'html',
         columns: [
             {data: 'DT_RowIndex' ,name:'DT_RowIndex',searchable: false,orderable: false},
-            {data: 'property_type', name: 'property_type',orderable: false},
             {data: 'image', name: 'image',orderable: false},
             {data: 'heading', name:'heading',orderable: false,defaultContent:919786123454},
             {data: 'content', name:'content',orderable: false},

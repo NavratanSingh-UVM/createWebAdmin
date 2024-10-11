@@ -2,8 +2,8 @@
     <div class="card bg-transparent border-0">
         <div class="card-header d-block d-md-none bg-transparent px-0 py-1 border-bottom-0" id="heading-calender">
             <h5 class="mb-0">
-                <button class="btn btn-block collapse-parent collapsed border shadow-none" data-toggle="collapse" data-number="7." data-target="#calender-collapse" aria-expanded="true" aria-controls="calender-collapse">
-                    <span class="number">7.</span> Calender
+                <button class="btn btn-block collapse-parent collapsed border shadow-none" data-toggle="collapse" data-number="6." data-target="#calender-collapse" aria-expanded="true" aria-controls="calender-collapse">
+                    <span class="number">6.</span> Calender
                 </button>
             </h5>
         </div>
@@ -32,8 +32,6 @@
 
                             <div style="height: 100vh;width:100%">
                                 <div id='calendar1'></div>
-                                 <div id="calendar"></div>
-
                             </div>
                         </div>
                     </div>

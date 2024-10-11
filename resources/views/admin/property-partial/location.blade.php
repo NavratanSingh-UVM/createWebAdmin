@@ -18,7 +18,7 @@
                         <div class="card mb-6">
                             <div class="card-body p-6">
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    {{-- <div class="col-md-12">
                                          <div class="form-group">
                                            <label for="address_address">Address</label>
                                            <input type="text" id="address-input" name="location" class="form-control map-input" placeholder="Search address" value="{{ $propertyListing->location ?? '' }}">
@@ -31,15 +31,7 @@
                                         <!--<label for="location">Address</label>-->
                                         <!--<input type="text" class="form-control" id="location" name="location" placeholder="Search address" value="{{ $propertyListing->location ?? '' }}">-->
                                     </div>
-                                    <!--<div class="col-md-12">-->
-                                    <!--    <div id="map"-->
-                                    <!--        style="width:100%;height:600px;margin-top:10px;">-->
-                                    <!--    </div>-->
-                                    <!--    <div id="infowindow-content">-->
-                                    <!--        <span id="place-name" class="title"></span><br />-->
-                                    <!--        <span id="place-address"></span>-->
-                                    <!--    </div>-->
-                                    <!--</div>-->
+                                  --}}
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="iframe_link">Iframe Link(Embed Link)</label>

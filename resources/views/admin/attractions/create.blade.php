@@ -43,21 +43,6 @@
                                               </div>
                                             </div>
                                         </div>
-                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val-username">Attraction Property<span class="text-danger">*</span>
-                                            </label>
-                                              <div class="col-lg-6">
-                                                <select class="form-control" name="property_id">
-                                                    <option value="">Select Property</option>
-                                                    @foreach ($propertyList as $PropertyList)
-                                                      <option value="{{ $PropertyList->id }}" @if (!empty($data)) @selected($PropertyList->id == $data->property_id) @endif>{{ $PropertyList->property_name }}</option>
-                                                    @endforeach
-                                                </select>
-                                                @error('country_name')
-                                                 <span class="text-danger">{{ $message }}</span>   
-                                                @enderror
-                                            </div>
-                                        </div>
                                         <div class="form-group row">
                                             <label class="col-lg-4 col-form-label" for="val-username">Attraction Heading<span class="text-danger">*</span>
                                             </label>
@@ -113,7 +98,7 @@
             success:function(res){  
              if(res.status==200){
                 toastr.success(res.msg); 
-                window.location.href = 'http://127.0.0.1:8000/admin/attraction/list';
+                window.location.href = site_url+'/admin/attraction/list';
                
                }
              },

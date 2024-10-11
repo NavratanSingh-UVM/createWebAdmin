@@ -18,7 +18,7 @@ let tables;
         scrollX: true,
         "bLengthChange" : false,
         ajax:{
-            url:site_url+"/admin/property-listing/get-reviews-rating",
+            url:site_url+"/admin/property/get-reviews-rating",
             data:function(d){
                d.property_id =$("input[name='property_listing_id']").val()
             }
@@ -59,7 +59,7 @@ let tables;
             "rating":$("select[name=rating]").val()
        }
        $.ajax({
-            url:site_url+"/admin/property-listing/store-reviews-rating",
+            url:site_url+"/admin/property/store-reviews-rating",
             type:"POST",
             data:formData,
             success:function(res){
@@ -127,7 +127,7 @@ $(".update_reviews").on('click',function() {
     showLoader();
     let formData = new FormData($("#update_reviews_rating")[0]);
     $.ajax({
-        url:site_url+"/admin/property-listing/reviews-rating-update",
+        url:site_url+"/admin/property/reviews-rating-update",
         type:"POST",
         data:formData,
         cache:false,
@@ -168,7 +168,7 @@ function reviewsDelete(id) {
         if (result.isConfirmed) {
             showLoader();
             $.ajax({
-                url: site_url+"/admin/property-listing/reviews-rating-delete",
+                url: site_url+"/admin/property/reviews-rating-delete",
                 type: 'POST',
                 dataType: "json",
                 data:{'id':id},

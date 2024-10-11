@@ -6,18 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Exception;
 use Carbon\Carbon;
-use App\Models\City;
 use App\Models\User;
-use App\Models\State;
-use App\Models\Cities;
-use App\Models\Region;
-use App\Models\Country;
-use App\Models\Currency;
 use App\Models\MainAminity;
 use App\Models\PropertyType;
 use App\Models\PropertyGallery;
 use App\Models\ImportIcal;
 use App\Models\SubAminities;
+use App\Models\PropertyRates;
+use App\Models\PropertyBooking;
 use App\Models\PropertyListing;
 use App\Models\PropertiesAminites;
 use Yajra\DataTables\Facades\DataTables;
@@ -61,8 +57,8 @@ class PropertyListingController extends Controller
                     return $actionBtn;
                 })
                 ->addColumn('status',function($row) {
-                    if($row->approval =='0'):
-                        return '<span class="badge badge-pill badge-secondary">Pending Approval</span>';
+                    if($row->status =='0'):
+                        return '<span class="badge badge-pill badge-secondary">Pending</span>';
                     else:
                         return '<span class="badge badge-pill badge-success">Active</span>';
                     endif;
@@ -236,7 +232,6 @@ class PropertyListingController extends Controller
               'poolheating_fee' =>$request->input("poolheating_fee"),
               'pool_heating_fees_perday' =>$request->input("pool_heating_fees_perday"),
               'tax_rates' =>$request->input("tax_rates"),
-            //   'currency_id'=>$request->input("rates"),
               'rates_notes'=>$request->input("rates_notes"),
               'cancellation_policies'=>$request->input("cancellation_policy"),
          ]);
@@ -253,47 +248,47 @@ class PropertyListingController extends Controller
   
     }
   
-    public function rentalPolicyStore(Request $request){
+    // public function rentalPolicyStore(Request $request){
   
-          $check_create =PropertyListing::where('id',$request->input('property_listing_id'))->pluck('cancelletion_policies_id')->first();
-          $file_name = "";
-          $cancel_rental_file_name ="";
-          if($request->hasFile('upload_rental_polices')):
-              $file = $request->file('upload_rental_polices');
-              $ext = $file->getClientOriginalExtension();
-              $file_name = uniqid().'.'.$ext;
-              $file->move(storage_path('app/public/upload/document/rental_policies/'),$file_name);
-          endif;
-          if($request->hasFile('upload_cancel_rental_polices')):
-              $file = $request->file('upload_cancel_rental_polices');
-              $ext = $file->getClientOriginalExtension();
-              $cancel_rental_file_name = uniqid().'.'.$ext;
-              $file->move(storage_path('app/public/upload/document/rental_policies/'),$cancel_rental_file_name);
-          endif;
-          $propertyListing = PropertyListing::where('id',$request->input('property_listing_id'))->update([
-              'rental_policies'=>$request->input("rental_policies"),
-              'upload_rental_polices'=>$file_name,
-              'upload_cancel_rental_polices'=>$cancel_rental_file_name,
-              'cancelletion_policies_id'=>$request->input("cancel_rental_polices")
-         ]);
-         if($check_create==null){
-          return response()->json([
-              'status'=>'2',
-              'msg'=>"Property Created Successfully !"
-          ]);  
-       }elseif($propertyListing && $check_create==!null){
-              return response()->json([
-                  'property_id'=>$request->input('property_listing_id'),
-                  'status'=>'1',
-                   'msg'=>'update'
-              ]);
-       }else{
-              return response()->json([
-                  'status'=>'0'
-              ]);
-          }
+    //       $check_create =PropertyListing::where('id',$request->input('property_listing_id'))->pluck('cancelletion_policies_id')->first();
+    //       $file_name = "";
+    //       $cancel_rental_file_name ="";
+    //       if($request->hasFile('upload_rental_polices')):
+    //           $file = $request->file('upload_rental_polices');
+    //           $ext = $file->getClientOriginalExtension();
+    //           $file_name = uniqid().'.'.$ext;
+    //           $file->move(storage_path('app/public/upload/document/rental_policies/'),$file_name);
+    //       endif;
+    //       if($request->hasFile('upload_cancel_rental_polices')):
+    //           $file = $request->file('upload_cancel_rental_polices');
+    //           $ext = $file->getClientOriginalExtension();
+    //           $cancel_rental_file_name = uniqid().'.'.$ext;
+    //           $file->move(storage_path('app/public/upload/document/rental_policies/'),$cancel_rental_file_name);
+    //       endif;
+    //       $propertyListing = PropertyListing::where('id',$request->input('property_listing_id'))->update([
+    //           'rental_policies'=>$request->input("rental_policies"),
+    //           'upload_rental_polices'=>$file_name,
+    //           'upload_cancel_rental_polices'=>$cancel_rental_file_name,
+    //           'cancelletion_policies_id'=>$request->input("cancel_rental_polices")
+    //      ]);
+    //      if($check_create==null){
+    //       return response()->json([
+    //           'status'=>'2',
+    //           'msg'=>"Property Created Successfully !"
+    //       ]);  
+    //    }elseif($propertyListing && $check_create==!null){
+    //           return response()->json([
+    //               'property_id'=>$request->input('property_listing_id'),
+    //               'status'=>'1',
+    //                'msg'=>'update'
+    //           ]);
+    //    }else{
+    //           return response()->json([
+    //               'status'=>'0'
+    //           ]);
+    //       }
   
-    }
+    // }
 
     public function locationInfoStore(Request $request) {
           $propertyListing = PropertyListing::where('id',$request->input('property_listing_id'))->update([
@@ -315,7 +310,7 @@ class PropertyListingController extends Controller
     }
   
     public function galleryImageStore(Request $request){
-      
+        $check_create =PropertyGallery::where('property_id',$request->input('property_listing_id'))->first();
         // $validator = Validator::make($request->all(), [
         //        'files.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:8192',
         //     ]);
@@ -336,20 +331,21 @@ class PropertyListingController extends Controller
                  if ($request->hasFile('files'.$x)){
                        $image = $request->file('files'.$x);
                         $ext = "webp";
+                        $originalImageName = uniqid().'.'.$ext;
                        $thumbnail = Image::make($image->getRealPath())->resize(300, 300, function ($constraint) {
                           $constraint->aspectRatio();
                            $constraint->upsize();
                        })->encode($ext,100);
-                      $originalImageName = uniqid().'.'.$ext;
-                     
                       $thumbnailPath = public_path('storage/upload/property_image/gallery_image/');
+                      $imagePath = $image->move(public_path('storage/upload/property_image/gallery_image/'), $originalImageName);
+                      $thumbnailPath = public_path('storage/upload/property_image/main_image/');
                       if (!file_exists($thumbnailPath)) {
                         mkdir($thumbnailPath, 0777, true);
                     }
-                      $thumbnail->save($thumbnailPath . "" . $originalImageName);
-                     
-                      $thumbnail->destroy();
-                     
+                     $thumbnail = Image::make($imagePath)->fit(100, 100);
+                     $thumbnail->save($thumbnailPath . " " . $originalImageName);
+                     $thumbnail->destroy();
+
                       $propertyListing = PropertyGallery::create([
                           "property_id"=>$request->input("property_listing_id"),
                           "image_name"=>$originalImageName
@@ -357,17 +353,23 @@ class PropertyListingController extends Controller
                  }
             }
           }
-          if($propertyListing):
-              return response()->json([
-                  'property_id'=>$request->input('property_listing_id'),
-                  'status'=>'1'
-              ]);
-          else:
-              return response()->json([
-                  'status'=>'0'
-              ]);
-          endif;
-      
+
+          if($check_create==null){
+             return response()->json([
+                'status'=>'2',
+                'msg'=>"Property Created Successfully !"
+             ]);  
+          }elseif($propertyListing && $check_create==!null){
+            return response()->json([
+                'property_id'=>$request->input('property_listing_id'),
+                'status'=>'1',
+                 'msg'=>'update'
+             ]);
+          }else{
+            return response()->json([
+              'status'=>'0'
+             ]);
+         }
     }
   
     public function calenderSynchronization(Request $request) {
@@ -583,23 +585,6 @@ class PropertyListingController extends Controller
           endif;
     }
   
-    public function propertyApproval(Request $request) {
-          $propertListingUpdate = PropertyListing::where('id',$request->input('id'))->update([
-              'approval'=>$request->input('value'),
-              'subscription_date'=>$request->input('value')=='1'?date('Y-m-d'):NUll,
-          ]);
-          if($propertListingUpdate):
-              return response()->json([
-                  'status'=>'1',
-                  'msg'=> $request->input('value')=='1'?"Property Approved Successfully !":"Property Inactive Successfully",
-              ]);
-          else:
-              return response()->json([
-                  'status'=>'1',
-                  'msg'=>"Property Not Approved ! Please try again."
-              ]);
-          endif;
-    }
   
     public function propertyFeature(Request $request) {
           $propertListingUpdate = PropertyListing::where('id',$request->input('id'))->update([
@@ -780,6 +765,7 @@ class PropertyListingController extends Controller
     }
 
     public function rateManualBooking(Request $request) {
+      
           $validator = Validator::make($request->all(), [
               'minimum_stay'=>'required',
           ]);
@@ -822,8 +808,10 @@ class PropertyListingController extends Controller
            }
           }
           if($msg==1){
+             PropertyListing::where('id',$request->input('rate_property_id'))->update(['status'=>'1']);
              return response()->json(['status'=>200, "msg"=>"Rate Create SuccessFully"]);
           }
+        //    PropertyListing::where('id',$request->input('rate_property_id'))->update(['status'=>'1']);
           return response()->json(['status'=>200, "msg"=>"Rate Update SuccessFully"]);
     } 
 
