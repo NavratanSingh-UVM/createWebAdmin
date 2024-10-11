@@ -14,14 +14,16 @@ use Intervention\Image\Facades\Image;
 
 class AboutController extends Controller
 {
+
     public function list($id=null){
-    $data="";
-    if(!is_null($propert_id)){
-        $data = AboutDetails::where("id",decrypt($propert_id))->first();
-        return view("admin.about_us.index",compact('data'));
-       }
-       return view("admin.about_us.index");
+      $data="";
+       if(!is_null($propert_id)){
+         $data = AboutDetails::where("id",decrypt($propert_id))->first();
+         return view("admin.about_us.index",compact('data'));
+        }
+        return view("admin.about_us.index");
     }
+
     public function create(Request $request){
         $data= AboutDetails::first();
         if(!empty($data)){
@@ -29,16 +31,8 @@ class AboutController extends Controller
         }
             return view("admin.about_us.create");
     }
+    
     public function store(Request $request){
-        // $rule = [
-        //     'ownerName'=>'required',
-        //     'Content'=>'required',
-        //     'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000'
-        // ];
-        // $validator = Validator::make($request->all(),$rule);
-        // if($validator->fails()) :
-        //     return redirect()->back()->withErrors($validator)->withInput();
-        // else:
             $status= AboutDetails::first();
             if($request->hasfile('image')):
                 $image = $request->file('image');
@@ -86,49 +80,5 @@ class AboutController extends Controller
 
             }
     }
-    public function edit($id) {
-        $countries = Country::get();
-        $states = State::get();
-        $data = Carousel::findOrFail(decrypt($id));
-        return view ('admin.about_us.edit',compact('countries','states','data'));
-    }
-
-    public function Update(Request $request) {
-        $rule = [
-            'country_id'=>'required',
-            'state_id' => 'required',
-            'tax'=>'required'
-        ];
-        $validator = Validator::make($request->all(),$rule);
-        if($validator->fails()) :
-            return redirect()->back()->withErrors($validator)->withInput();
-        else:
-            $tax = AboutDetails::where('id',decrypt($request->input('id')))->update([
-                'country_id' =>$request->input('country_id'),
-                'state_id' =>$request->input('state_id'),
-                'tax'=>$request->input('tax')
-            ]);
-            if($tax):
-                return to_route('admin.about_us.list')->with('success','About us Updated Successfully !');
-            else:
-                return redirect()->back()->with('error','About us Not Updated successfully');
-            endif;
-        endif;
-    }
-
-    public function destroy(Request $request){
-        $result = AboutDetails::where('id',$request->input('id'))->delete();
-        if($result):
-            return response()->json([
-                'status'=>200,
-                'message'=>'About us  Delete Successfully'
-            ]);
-        else:
-            return response()->json([
-                'status'=>500,
-                'message'=>'About us Not Delete, Please Try again',
-            ]);
-        endif;
-
-    }
+   
 }

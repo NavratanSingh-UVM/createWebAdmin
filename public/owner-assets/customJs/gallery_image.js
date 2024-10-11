@@ -175,9 +175,10 @@ showImage = async (property_id)=>{
             }
         })
         const results = await response.json();
-        if(response.status==2){
+        if(results.status==2){
+            console.log('testing',results);
             hideLoader();
-            toastr.success(response.msg);
+            toastr.success(results.msg);
             toastr.success("Property Create Successfully !")
             window.setTimeout(() => {
                 window.location.href=site_url+"/admin/property/list"; 

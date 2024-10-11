@@ -70,82 +70,6 @@ Route::middleware(['back-prevent-history','auth'])->group(function () {
         */
     });
 
-    /* 
-        Loaction Route Start
-    */
-    Route::controller(LocationController::class)->prefix('location')->name('location.')->group(function () {
-        /* 
-            Country Route Start 
-        */
-            Route::get('country','country')->name('country');
-            Route::get('country-create','countryCreate')->name('country.create');
-            Route::post('country-store','countryStore')->name('country.store');
-            Route::get('country-edit/{id}','countryEdit')->name('country.edit');
-            Route::post('country-update','countryUpdate')->name('country.update');
-            Route::post('country-delete','countryDelete')->name('country.delete');
-        /* 
-            Country Route End
-        */
-        /* 
-            State State Start 
-        */
-            Route::get('state','state')->name('state');
-            Route::get('state-create','stateCreate')->name('state.create');
-            Route::post('state-store','stateStore')->name('state.store');
-            Route::get('state-edit/{id}','stateEdit')->name('state.edit');
-            Route::post('state-update','stateUpdate')->name('state.update');
-            Route::post('state-delete','stateDelete')->name('state.delete');
-            Route::post('get-state-by-country-id','getStateByCountryId');
-        /* 
-            State Route End
-        */
-
-        /* 
-            Region Route Start 
-        */
-            Route::get('region','region')->name('region');
-            Route::get('region-create','regionCreate')->name('region.create');
-            Route::post('region-store','regionStore')->name('region.store');
-            Route::get('region-edit/{id}','regionEdit')->name('region.edit');
-            Route::post('region-update','regionUpdate')->name('region.update');
-            Route::post('region-delete','regionDelete')->name('region.delete');
-            // Route::post('get-region-by-state-id','getRegionByStateId');
-        /* 
-            Region Route End
-        */
-
-        /* 
-            City Route Start 
-        */
-        Route::get('city','city')->name('city');
-        Route::get('city-create','cityCreate')->name('city.create');
-        Route::post('city-store','cityStore')->name('city.store');
-        Route::get('city-edit/{id}','cityEdit')->name('city.edit');
-        Route::post('city-update','cityUpdate')->name('city.update');
-        Route::post('city-delete','cityDelete')->name('city.delete');
-        
-    /* 
-        City Route End
-    */
-        /* 
-            Cities Route Start 
-        */
-        Route::get('cities','cities')->name('cities');
-        Route::get('cities-create','citiesCreate')->name('cities.create');
-        Route::post('cities-store','citiesStore')->name('cities.store');
-        Route::get('cities-edit/{id}','citiesEdit')->name('cities.edit');
-        Route::post('cities-update','citiesUpdate')->name('cities.update');
-        Route::post('cities-delete','citiesDelete')->name('cities.delete');
-        
-    /* 
-        Cities Route End
-    */
-        
-    });
-    /* 
-        Loaction Route End
-    */
-
     // Property Listing Route Start
     Route::controller(PropertyListingController::class)->prefix('property-listing')->name('property.listing.')->group(function () {
         Route::get('/','index')->name('index');
@@ -186,56 +110,9 @@ Route::middleware(['back-prevent-history','auth'])->group(function () {
         Route::get('user-management','userMangement')->name('user.management');
         Route::get('manage-owner-billing-detail','OwnerBillingAdress')->name('manage.owner.billing.detail');
         Route::post('change-user-status','changeUserStatus')->name('change.user.status');
-        Route::get('owner-subscription','ownerSubscription')->name('owner.subscription');
-        Route::get('/property-booking-list','propertyBookingList')->name('property.booking_details');
-        Route::get('property-booking-details/{id}', 'propertyBookingDetails')->name('property.booking.details');
     });
 
-    // Partner Listing Route
-    Route::controller(PartnerListingController::class)->prefix('partner-listing')->name('partner.listing.')->group(function() {
-        Route::get('/manage-payments','managePayment')->name('manage.payment');
-        Route::get('/manage-listing','manageListing')->name('manage.listing');
-    });
-
-    // Cancel Booking Route
-    Route::controller(CancelBookingController::class)->prefix('cancel-booking')->name('cancel.booking.')->group(function() {
-        Route::get('/list','cancelBookingList')->name('list');
-    });
-
-    // Email template Route 
-    Route::controller(EmailTemplateController::class)->prefix('email-template')->name('email.template.')->group(function() {
-        Route::get('payment-reminder','paymentReminder')->name('payment.reminder');
-        Route::post('/store-paymnet-request','storePaymentRequest')->name('store.payment.request');
-        Route::get('/cancellation-message','cancellationMessage')->name('cancellation.message');
-        Route::post('/store-cancellation-message','storeCancellationMessage')->name('store.cancellation.message');
-        Route::get('/welcome-message','welcomeMessage')->name('welcome.message');
-        Route::post('/store-welcome-message','storeWelcomeMessage')->name('store.welcome.message');
-        Route::get('invite-to-leave-a-review','inviteToLeaveAReview')->name('invite.to.leave.a.review');
-        Route::post('/store-leave-to-leave-a-review','storeInviteToLeaveAReview')->name('store.invite.to.leave.a.review');
-
-    });
-    //Tax Route
-      Route::controller(TaxController::class)->prefix('tax')->name('tax.')->group(function(){
-        Route::get('list','list')->name('list');
-        Route::get('create','create')->name('create');
-        Route::post('store','store')->name('store');
-        Route::get('edit/{id}','edit')->name('edit');
-        Route::post('update','update')->name('update');
-        Route::post('delete','destroy')->name('delete');
-     });
-     // Insurance
-      Route::controller(InsuranceController::class)->prefix('insurance')->name('insurance.')->group(function(){
-        Route::get('list','list')->name('list');
-        Route::post('export','export')->name('export');
-       Route::post('delete','destroy')->name('delete');
-    });
 });
-
-    Route::controller(LocationController::class)->prefix('location')->group(function(){
-        Route::post('get-region-by-state-id','getRegionByStateId');
-        Route::post('get-city-by-region-id','getCityByRegionId');
-        Route::post('get-sub-city-by-city-id','getSubCityByCityId');
-    });
 
     Route::get('/ip',function (){
         dd(Request::ip(),$_SERVER);
