@@ -14,17 +14,4 @@ class MainAminity extends Model
         'aminity_name',
         'status'
     ];
-    protected static function boot() 
-    {
-        parent::boot();
-
-        static::deleting(function(MainAminity $MainAminity) {
-            foreach ($MainAminity->subAminities()->get() as $subAminities) {
-                $subAminities->delete();
-            }
-        });
-    }
-    public function subAminities() {
-        return $this->hasMany(SubAminities::class,'main_aminities_id');
-    }
 }

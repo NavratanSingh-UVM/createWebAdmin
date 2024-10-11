@@ -74,16 +74,16 @@ Route::middleware(['back-prevent-history','auth'])->group(function () {
         Route::post('block-manual-booking','blockManualBooking')->name('block.manual.booking');
         Route::post('rate-manual-booking','rateManualBooking')->name('rate.manual.booking');
         Route::post('un-block-manual-booking','unBlockManualBooking')->name('unblock.manual.booking');
-     });
+    });
       //IcalLink
-      Route::controller(IcalLinkController::class)->prefix('icalLink')->name('icalLink.')->group(function(){
+    Route::controller(IcalLinkController::class)->prefix('icalLink')->name('icalLink.')->group(function(){
         Route::get('list','list')->name('list');
         Route::get('create','create')->name('create');
         Route::post('store','store')->name('store');
         Route::get('edit/{id}','edit')->name('edit');
         Route::post('update','update')->name('update');
         Route::post('delete','destroy')->name('delete');
-     });
+    });
       //Attraction
     Route::controller(AttractionController::class)->prefix('attraction')->name('attraction.')->group(function(){
         Route::get('list','list')->name('list');
@@ -92,16 +92,14 @@ Route::middleware(['back-prevent-history','auth'])->group(function () {
         Route::get('edit/{id}','edit')->name('edit');
         Route::post('update','update')->name('update');
         Route::post('delete','destroy')->name('delete');
-     });
+    });
      //Aminities
-     Route::controller(AminitiesController::class)->prefix('amenities')->name('amenities.')->group(function(){
-        Route::get('list','list')->name('list');
-        Route::get('create','create')->name('create');
-        Route::post('store','store')->name('store');
-        Route::get('edit/{id}','edit')->name('edit');
-        Route::post('update','update')->name('update');
-        Route::post('delete','destroy')->name('delete');
-     });
+    Route::controller(AminitiesController::class)->prefix('amenities')->name('amenities.')->group(function(){
+      Route::get('list','list')->name('list');
+      Route::get('create/{id?}','create')->name('create');
+      Route::post('store','store')->name('store');
+      Route::post('delete','destroy')->name('delete');
+    });
       //Review
       Route::controller(ReviewController::class)->prefix('review')->name('review.')->group(function(){
         Route::get('list','list')->name('list');

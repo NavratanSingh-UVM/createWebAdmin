@@ -15,28 +15,24 @@
                             $subAminitiesId = [];
                             $subAminities = $propertyListing->property_aminities->toArray();
                             foreach ($subAminities as $key => $subAminitie):
-                                $subAminitiesId[] = $subAminitie['sub_aminities_id'];
+                                $subAminitiesId[] = $subAminitie['aminities_id'];
                             endforeach;
                         @endphp
                     @endif
                     @if (!empty($mainAminity))
-                        @foreach ($mainAminity as $aminities)
-                            <div class="card-body p-3">
-                                <h3 class="card-title mb-0 text-heading fs-22 lh-15"> {{ $aminities->aminity_name }}</h3>
-                                @if (!empty($aminities->subAminities))
+                       
+                            <div class="card-body p-12">
                                     <div class="row">
-                                        @foreach ($aminities->subAminities as $subAminities)
                                             <div class="col-sm-6 col-lg-3 mt-3">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox"  class="custom-control-input" name="sub_aminites" id="{{ $subAminities->name }}" @isset($subAminitiesId)@if (in_array($subAminities->id, $subAminitiesId)) checked @endif @endisset value="{{ $subAminities->id }}">
-                                                    <label class="custom-control-label" for="{{ $subAminities->name }}">{{ $subAminities->name }}</label>
-                                                </div>
+                                             @foreach ($mainAminity as $aminities)
+                                            <div class="form-check">
+                                              <input class="form-check-input" type="checkbox" id="{{ $aminities->id }}" name="aminites"  @isset($subAminitiesId)@if (in_array($aminities->id, $subAminitiesId)) checked @endif @endisset value="{{ $aminities->aminity_name }}">
+                                              <label class="form-check-label">{{ $aminities->aminity_name}}</label>
                                             </div>
-                                        @endforeach
+                                            @endforeach  
+                                            </div>
                                     </div>
-                                @endif
                             </div>
-                        @endforeach
                     @endif
                 </div>
                 <div class="d-flex flex-wrap">

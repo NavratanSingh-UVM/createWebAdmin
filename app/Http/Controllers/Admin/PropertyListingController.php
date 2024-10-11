@@ -73,7 +73,7 @@ class PropertyListingController extends Controller
     }
     public function create($propert_id=null){
         $propertyTypes = PropertyType::get();
-        $mainAminity = MainAminity::with('subAminities')->get();
+        $mainAminity = MainAminity::get();
         $propertyListing = "";
         if(!is_null($propert_id)){
             $propertyListing = PropertyListing::where("id",base64_decode($propert_id))->first();
@@ -311,16 +311,6 @@ class PropertyListingController extends Controller
   
     public function galleryImageStore(Request $request){
         $check_create =PropertyGallery::where('property_id',$request->input('property_listing_id'))->first();
-        // $validator = Validator::make($request->all(), [
-        //        'files.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:8192',
-        //     ]);
-          
-        //     if ($validator->fails()) {
-        //         return response()->json([ 
-        //              'status'=>'500',
-        //             'msg'=>"image is very larg"
-        //          ],500);
-        //      }
         $request->validate([
             'files.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:8192',
         ]);

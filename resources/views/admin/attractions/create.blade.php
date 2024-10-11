@@ -83,7 +83,7 @@
         console.error( error );
     } );
 </script>
-    <script>
+<script>
      var form = '#add-attraction-form';
        $(form).on('submit', function(event){
         event.preventDefault();
@@ -107,6 +107,6 @@
             
         })
     });
-    </script>
+</script>
 @endsection
  
