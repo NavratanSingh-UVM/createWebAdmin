@@ -29,11 +29,11 @@
                             <i class="icon-grid menu-icon"></i><span class="nav-text">Area Attractions</span>
                         </a>
                     </li>
-                    <li @if(in_array(request()->route()->getName(),['admin.amenities.list'])) class="mega-menu mega-menu-sm active" @endif>
+                    {{-- <li @if(in_array(request()->route()->getName(),['admin.amenities.list'])) class="mega-menu mega-menu-sm active" @endif>
                         <a href="{{ route('admin.amenities.list') }}" aria-expanded="false" @if(in_array(request()->route()->getName(),['admin.amenities.list'])) class="active" @endif>
                             <i class="icon-grid menu-icon"></i><span class="nav-text">Amenites</span>
                         </a>
-                    </li>
+                    </li> --}}
                     <li @if(in_array(request()->route()->getName(),['admin.review.list'])) class="mega-menu mega-menu-sm active" @endif>
                         <a href="{{ route('admin.review.list') }}" aria-expanded="false" @if(in_array(request()->route()->getName(),['admin.review.list'])) class="active" @endif>
                             <i class="icon-grid menu-icon"></i><span class="nav-text">Reviews</span>

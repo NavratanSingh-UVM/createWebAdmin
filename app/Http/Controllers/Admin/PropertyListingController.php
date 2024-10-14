@@ -73,7 +73,7 @@ class PropertyListingController extends Controller
     }
     public function create($propert_id=null){
         $propertyTypes = PropertyType::get();
-        $mainAminity = MainAminity::get();
+        $mainAminity = MainAminity::with('subAminities')->get();
         $propertyListing = "";
         if(!is_null($propert_id)){
             $propertyListing = PropertyListing::where("id",base64_decode($propert_id))->first();
