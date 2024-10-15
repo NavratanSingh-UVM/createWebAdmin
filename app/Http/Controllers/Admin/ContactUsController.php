@@ -7,95 +7,62 @@ use Illuminate\Http\Request;
 use Validator;
 use App\Models\ContactDetail;
 use DataTables;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 class ContactUsController extends Controller
 {
     public function list(Request $request){
-        if($request->ajax()):
-            $tax = ContactDetail::with('country')->with('state')->latest();
-            return Datatables::of($tax)
-                ->addIndexColumn()
-                ->addColumn('action', function($row){
-                    $actionBtn = '<a href="'.route('admin.contact_us.edit',['id'=>encrypt($row->id)]).'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" onclick="taxDelete('.$row->id.')">Delete</a>';
-                    return $actionBtn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-        endif;
-       return view("admin.contact_us.index");
-    }
-    public function create(Request $request){
-            return view("admin.contact_us.create");
-    }
-    public function store(Request $request){
-        $rule = [
-            'country_id'=>'required',
-            'state_id'=>'required',
-            'tax'=>'required'
-        ];
-        $validator = Validator::make($request->all(),$rule);
-        if($validator->fails()) :
-            return redirect()->back()->withErrors($validator)->withInput();
-        else:
-            $tax = ContactDetail::create([
-                'admin_id' =>$request->input('country_id'),
-                'about_video_url' =>$request->input('state_id'),
-                'about_heading'=>$request->input('tax'),
-                'about_content'=>$request->input('tax'),
-                'about_short_content'=>$request->input('tax'),
-                'about_inst_date'=>$request->input('tax'),
-                'about_update_date'=>$request->input('tax'),
-                'about_ip'=>$request->input('tax'),
-            ]);
-            if($tax):
-                return to_route('admin.contact_us.list')->with('success','Carousel Created Successfully !');
-            else:
-                return redirect()->back()->with('error','Carousel Not created successfully');
-            endif;
-        endif;
-    }
-    public function edit($id) {
-        $countries = Country::get();
-        $states = State::get();
-        $data = Carousel::findOrFail(decrypt($id));
-        return view ('admin.contact_us.edit',compact('countries','states','data'));
-    }
-
-    public function Update(Request $request) {
-        $rule = [
-            'country_id'=>'required',
-            'state_id' => 'required',
-            'tax'=>'required'
-        ];
-        $validator = Validator::make($request->all(),$rule);
-        if($validator->fails()) :
-            return redirect()->back()->withErrors($validator)->withInput();
-        else:
-            $tax = ContactDetail::where('id',decrypt($request->input('id')))->update([
-                'country_id' =>$request->input('country_id'),
-                'state_id' =>$request->input('state_id'),
-                'tax'=>$request->input('tax')
-            ]);
-            if($tax):
-                return to_route('admin.contact_us.list')->with('success','About us Updated Successfully !');
-            else:
-                return redirect()->back()->with('error','About us Not Updated successfully');
-            endif;
-        endif;
-    }
-
-    public function destroy(Request $request){
-        $result = ContactDetail::where('id',$request->input('id'))->delete();
-        if($result):
-            return response()->json([
-                'status'=>200,
-                'message'=>'About us  Delete Successfully'
-            ]);
-        else:
-            return response()->json([
-                'status'=>500,
-                'message'=>'About us Not Delete, Please Try again',
-            ]);
-        endif;
-
-    }
+        $data = ContactDetail::first();
+          return view("admin.contact_us.create",compact('data'));
+      }
+  
+      public function create(Request $request){
+          $data= ContactDetail::first();
+          if(!empty($data)){
+           return view("admin.contact_us.create",compact('data'));
+          }
+              return view("admin.contact_us.create");
+      }
+      
+      public function store(Request $request){
+              $status= ContactDetail::where('id',$request->input('contactId'))->first();
+              if(empty($status)):
+                 $data=new ContactDetail();
+                 $data->contact_name=$request->input('contactName');
+                 $data->contact_email= $request->input('contactEmail');
+                 $data->contact_email1=$request->input('contactEmail1');
+                 $data->contact_phone= $request->input('phoneNo');
+                 $data->contact_addr=$request->input('contactAddress');
+                 $data->contact_mobile_number= $request->input('mobileNo');
+                 $data->save();
+              endif;
+                  $aboutUs = ContactDetail::where('id',$request->input('contactId'))->update([
+                      'contact_name'=>$request->input('contactName'),
+                      'contact_email'=> $request->input('contactEmail'),
+                      'contact_email1'=>$request->input('contactEmail1'),
+                      'contact_phone'=> $request->input('phoneNo'),
+                      'contact_addr'=>$request->input('contactAddress'),
+                      'contact_mobile_number'=> $request->input('mobileNo'),
+                  ]);
+  
+              if($status==null){
+                    return response()->json([
+                      'status'=>200,
+                      'msg' =>'Contact us Created Successfully !'
+                   ]);
+              }elseif($status==!null){
+                   return response()->json([
+                       'status'=>200,
+                      'msg' =>'Contact us Updated Successfully !'
+                  ]);
+             
+              }else{
+                  return response()->json([
+                      'status'=>500,
+                      'msg' =>'Contact us  Not created successfully !'
+                  ]);
+  
+              }
+      }
+     
 }

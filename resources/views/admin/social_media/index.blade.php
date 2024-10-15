@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @push('title')
-  Social Links
+   Social media link
 @endpush
 @section('content')
 <!--**********************************
@@ -11,9 +11,11 @@
                 <div class="col p-md-0">
                     @include('flash-message.flash-message')
                     <div class="row">
-                        <div class="col-md-6"><h4 style="color:black">Social Links</h4></div>
-                        <div class="col-md-6 text-right"><a href="{{ route('admin.social_link.create') }}" class="btn mb-1 btn-primary float-right">Add Social Links <span class="btn-icon-right"><i class="fa fa-plus"></i></span>
-                        </a> </div>                                
+                        <div class="col-md-6"><h4 style="color:black">Socail media link</h4></div>
+                       
+                        <div class="col-md-6 text-right"><a href="{{ route('admin.social_link.create') }}" class="btn mb-1 btn-primary float-right">Add Socail media link <span class="btn-icon-right"><i class="fa fa-plus"></i></span>
+                        </a> </div>    
+                                                
                     </div>
                 </div>
             </div> 
@@ -24,16 +26,16 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-bordered zero-configuration display nowrap" style="width:100%" id="owner-list">
+                                    <table class="table table-striped table-bordered zero-configuration display nowrap" style="width:100%" id="social_link-list">
                                         <thead>
                                             <tr>
                                                 <th>Sr No.</th>
-                                                <th>Customer Name</th>
-                                                <th>Customer Email</th>
-                                                <th>Customer Phone</th>
-                                                <th>Password</th>
-                                                <th>Status</th>
-                                                {{-- <th>Action</th> --}}
+                                                <th>facebook</th>
+                                                <th>X</th>
+                                                <th>linkdin</th>
+                                                 <th>pinterest</th>
+                                                <th>youtube</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -54,7 +56,7 @@
 @push('js')
 <script>
    $(function () {
-    var table = $('#owner-list').DataTable({
+    var table = $('#social_link-list').DataTable({
         "language": {
         "zeroRecords": "No record(s) found.",
          searchPlaceholder: "Search records"
@@ -70,16 +72,17 @@
        bStateSave: true,
        scrollX: true,
         ajax:{
-            url:"{{route('admin.user.management')}}",
+            url:"{{route('admin.social_link.list')}}",
         },
         dataType: 'html',
         columns: [
             {data: 'DT_RowIndex' ,name:'DT_RowIndex',searchable: false,orderable: false},
-            {data: 'name', name: 'name',orderable: false},
-            {data: 'email', name: 'email',orderable: false},
-            {data: 'phone', name: 'phone',orderable: false,defaultContent:919786123454},
-            {data: 'show_password', name: 'show_password',orderable: false},
-            {data: 'status', name: 'status',orderable: false},
+            {data: 'facebook', name:'facebook',orderable: false},
+            {data: 'twitter', name: 'twitter',orderable: false},
+            {data: 'linkdin', name: 'linkdin',orderable: false},
+            {data: 'pinterest', name:'pinterest',orderable: false,defaultContent:919786123454},
+            {data: 'youtube', name:'youtube',orderable: false},
+            {data: 'action', name: 'action',orderable: false},
         ],
     });
     $.fn.dataTable.ext.errMode = 'none';
@@ -98,25 +101,37 @@
         table.draw();
     })
   });
-
-function userStatusChange(value,id){
-    showLoader();
-       $.ajax({
-        url: "{{ route('admin.change.user.status') }}",
-        type: 'POST',
-        dataType: "json",
-        data:{'id':id,"value":value,'_token': '{{ csrf_token()}}'},
-        cache:false,
-        success:function (res) {
-            hideLoader();
-            if(res.status=='1'){
-                toastr.success(res.msg)
-                setTimeout(function() {
-                    location.reload();
-                },500);
-            }else{
-                toastr.error(res.msg)
-            }
+//   state  Delete Method
+function socialDelete(id){
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+            showLoader();
+            $.ajax({
+                url: "{{ route('admin.social_link.delete') }}",
+                type: 'POST',
+                dataType: "json",
+                data:{'id':id,'_token': '{{ csrf_token()}}'},
+                cache:false,
+                success:function (res) {
+                    hideLoader();
+                    Swal.fire(
+                        'Confirmed!',
+                        res.msg,
+                        ).then((res)=>{
+                            setTimeout(function() {
+                                location.reload();
+                            },500);
+                    })
+                }
+            });
         }
     });
 }

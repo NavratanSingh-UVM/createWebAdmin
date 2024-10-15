@@ -19,11 +19,11 @@
                             <i class="icon-grid menu-icon"></i><span class="nav-text">Properties Listing</span>
                         </a>
                     </li>
-                     <li @if(in_array(request()->route()->getName(),['admin.icalLink.list'])) class="mega-menu mega-menu-sm active" @endif>
+                     {{-- <li @if(in_array(request()->route()->getName(),['admin.icalLink.list'])) class="mega-menu mega-menu-sm active" @endif>
                         <a href="{{ route('admin.icalLink.list') }}" aria-expanded="false" @if(in_array(request()->route()->getName(),['admin.icalLink.list'])) class="active" @endif>
                             <i class="icon-grid menu-icon"></i><span class="nav-text">Ical Link</span>
                         </a>
-                    </li>
+                    </li> --}}
                     <li @if(in_array(request()->route()->getName(),['admin.attraction.list'])) class="mega-menu mega-menu-sm active" @endif>
                         <a href="{{ route('admin.attraction.list') }}" aria-expanded="false" @if(in_array(request()->route()->getName(),['admin.attraction.list'])) class="active" @endif>
                             <i class="icon-grid menu-icon"></i><span class="nav-text">Area Attractions</span>

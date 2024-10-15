@@ -12,11 +12,22 @@ class SocialMediaController extends Controller
 {
     public function list(Request $request){
         if($request->ajax()):
-            $tax = SocialLink::with('country')->with('state')->latest();
-            return Datatables::of($tax)
+             $social = SocialLink::get();
+            return Datatables::of($social)
                 ->addIndexColumn()
+                // ->filter(function ($instance) use ($request) {
+                //     if($request->get('property_id') != ''):
+                //         $instance->where('id', $request->get('property_id'));
+                //     elseif($request->get('email') != ''):
+                //         $user = User::where('email',$request->get('email'))->first();
+                //         $instance->where('user_id', $user->id);
+                //     elseif($request->get('name') != ''):
+                //         $user = User::where('name',$request->get('name'))->first();
+                //         $instance->where('user_id', $user->id);
+                //     endif;
+                // })
                 ->addColumn('action', function($row){
-                    $actionBtn = '<a href="'.route('admin.social_link.edit',['id'=>encrypt($row->id)]).'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" onclick="taxDelete('.$row->id.')">Delete</a>';
+                    $actionBtn = '<a href="'.route('admin.social_link.create',['id'=>encrypt($row->id)]).'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" onclick="social_linkDelete('.$row->id.')">Delete</a>';
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
@@ -24,77 +35,69 @@ class SocialMediaController extends Controller
         endif;
        return view("admin.social_media.index");
     }
-    public function create(Request $request){
-            return view("admin.social_media.create");
+    public function create($id=null){
+        $data = "";
+        if(!is_null($id)){
+            $data = SocialLink::where("id",decrypt($id))->first();
+         return view("admin.social_media.create",compact('data'));
+        }
+        return view("admin.social_media.create",compact('data'));
     }
     public function store(Request $request){
-        $rule = [
-            'country_id'=>'required',
-            'state_id'=>'required',
-            'tax'=>'required'
-        ];
-        $validator = Validator::make($request->all(),$rule);
-        if($validator->fails()) :
-            return redirect()->back()->withErrors($validator)->withInput();
+       
+        $status=SocialLink::where('id',$request->input('SocialId'))->first();
+      
+        if($status==null):
+            $Social_Link=new SocialLink();
+            $Social_Link->facebook =$request->input('facebook');
+            $Social_Link->twitter =$request->input('twitter');
+            $Social_Link->linkdin=$request->input('linkdin');
+            $Social_Link->pinterest=$request->input('pinterest');
+            $Social_Link->youtube=$request->input('youtube');
+            $Social_Link->social_status='1';
+            $Social_Link->save();
         else:
-            $tax = SocialLink::create([
-                'admin_id' =>$request->input('country_id'),
-                'about_video_url' =>$request->input('state_id'),
-                'about_heading'=>$request->input('tax'),
-                'about_content'=>$request->input('tax'),
-                'about_short_content'=>$request->input('tax'),
-                'about_inst_date'=>$request->input('tax'),
-                'about_update_date'=>$request->input('tax'),
-                'about_ip'=>$request->input('tax'),
+            $Social_Link = SocialLink::where('id',$request->input('social_id'))->update([
+                'facebook' =>$request->input('facebook'),
+                'twitter' =>$request->input('twitter'),
+                'linkdin'=>$request->input('linkdin'),
+                'pinterest'=>$request->input('pinterest'),
+                'youtube'=>$request->input('youtube'),
+                'social_status'=>'1'
             ]);
-            if($tax):
-                return to_route('admin.social_link.list')->with('success','Carousel Created Successfully !');
-            else:
-                return redirect()->back()->with('error','Carousel Not created successfully');
-            endif;
-        endif;
+        endif;  
+        if($status==null){
+                return response()->json([
+                  'status'=>200,
+                  'msg' =>'Social Media link Created Successfully !'
+               ]);
+        }elseif($status==!null){
+               return response()->json([
+                   'status'=>200,
+                  'msg' =>'Social Media link  Updated Successfully !'
+              ]);
+         
+        }else{
+              return response()->json([
+                  'status'=>500,
+                  'msg' =>'Social Media link Not created successfully !'
+              ]);
+          }
+        
     }
-    public function edit($id) {
-        $countries = Country::get();
-        $states = State::get();
-        $data = Carousel::findOrFail(decrypt($id));
-        return view ('admin.social_media.edit',compact('countries','states','data'));
-    }
-
-    public function Update(Request $request) {
-        $rule = [
-            'country_id'=>'required',
-            'state_id' => 'required',
-            'tax'=>'required'
-        ];
-        $validator = Validator::make($request->all(),$rule);
-        if($validator->fails()) :
-            return redirect()->back()->withErrors($validator)->withInput();
-        else:
-            $tax = AboutDetails::where('id',decrypt($request->input('id')))->update([
-                'country_id' =>$request->input('country_id'),
-                'state_id' =>$request->input('state_id'),
-                'tax'=>$request->input('tax')
-            ]);
-            if($tax):
-                return to_route('admin.social_link.list')->with('success','About us Updated Successfully !');
-            else:
-                return redirect()->back()->with('error','About us Not Updated successfully');
-            endif;
-        endif;
-    }
+   
 
     public function destroy(Request $request){
         $result = SocialLink::where('id',$request->input('id'))->delete();
         if($result):
             return response()->json([
                 'status'=>200,
-                'message'=>'About us  Delete Successfully'
+                'message'=>'Social media link Delete Successfully'
             ]);
         else:
             return response()->json([
                 'status'=>500,
-                'message'=>'About us Not Delete, Please Try again',
+                'message'=>'Social media link Not Delete, Please Try again',
             ]);
         endif;
 

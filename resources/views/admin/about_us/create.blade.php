@@ -15,6 +15,7 @@
         <div class="content-body">
             <div class="row page-titles mx-0">
                 <div class="col p-md-0">
+                  <h4 style="color:black">About us</h4>
                     @include('flash-message.flash-message')
                 </div>
             </div>
@@ -56,12 +57,7 @@
                                          <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="description">Content</label>
-                                          {{-- @if (!empty($data))
-                                            @foreach ($data as $about )
-                                             <textarea id="textarea" name="content" rows="4" value="{{$about->about_content}}""></textarea>
-                                               @endforeach
-                                        @endif --}}
-                                        <textarea class="form-control" id="editor" name="Content"  rows="5" value="{{$data->content ?? ''}}"></textarea>
+                                        <textarea class="form-control" id="editor" name="Content"  rows="5">{{$data->content ?? ''}}</textarea>
 
                                             <span class="description text-danger"></span>
                                         </div>
@@ -105,15 +101,7 @@
             success:function(res){  
              if(res.status==200){
                 toastr.success(res.msg)
-                window.location.href = 'http://127.0.0.1:8000/admin/about_us/create';
-                //Swal.fire(
-                       // 'Confirmed!',
-                      //  res.msg,
-                      //  ).then((res)=>{
-                         //   setTimeout(function() {
-                            //    location.reload();
-                           // },500);
-                   // })
+                window.location.href = site_url+"/admin/about_us/create";
                }
              },
              error: function(res) {

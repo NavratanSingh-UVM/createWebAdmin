@@ -71,6 +71,7 @@ class PropertyListingController extends Controller
         endif;
        return view("admin.property-listing.index");
     }
+
     public function create($propert_id=null){
         $propertyTypes = PropertyType::get();
         $mainAminity = MainAminity::with('subAminities')->get();

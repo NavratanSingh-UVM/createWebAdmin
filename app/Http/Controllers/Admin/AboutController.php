@@ -33,7 +33,7 @@ class AboutController extends Controller
     }
     
     public function store(Request $request){
-            $status= AboutDetails::first();
+            $status= AboutDetails::where('id',$request->input('about_id'))->first();
             if($request->hasfile('image')):
                 $image = $request->file('image');
                 $ext = "webp";
@@ -54,7 +54,7 @@ class AboutController extends Controller
                 $aboutUs->content= $request->input('Content');
                 $aboutUs->save();
             endif;
-                $aboutUs = AboutDetails::where('id',$request->input('id'))->update([
+                $aboutUs = AboutDetails::where('id',$request->input('about_id'))->update([
                     'admin_id' =>Auth::user()->id,
                     'profile_img' =>empty($originalImageName)?$status->about_profile_img:$originalImageName,
                     'heading' => $request->input('ownerName'),

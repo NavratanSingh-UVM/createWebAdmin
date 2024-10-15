@@ -14,6 +14,7 @@
         <div class="content-body">
             <div class="row page-titles mx-0">
                 <div class="col p-md-0">
+                  <h4 style="color:black">Area attractions</h4>
                     @include('flash-message.flash-message')
                 </div>
             </div>

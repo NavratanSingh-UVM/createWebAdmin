@@ -71,6 +71,15 @@ $(".upload_gellery_image").on("click",async function(e) {
 		});
 		
 	const result = await response.json();
+    if(result.status=='2'){
+        hideLoader();
+        console.log(response);
+        toastr.success(response.msg);
+        toastr.success("Property Create Successfully !")
+        window.setTimeout(() => {
+            window.location.href=site_url+"/admin/property/list"; 
+         }, 2000);
+     }
 	if (response.status == 405) {
 		hideLoader();
 		console.log(response.statusText);
@@ -82,7 +91,7 @@ $(".upload_gellery_image").on("click",async function(e) {
 	if (response.status == 500) {
 		hideLoader();
 		 toastr.error(response.msg);
-		  toastr.error(results.message);
+		  toastr.error(response.message);
 		//console.log(response.statusText);
 	}
 	if (response.status == 422) {
@@ -95,7 +104,8 @@ $(".upload_gellery_image").on("click",async function(e) {
 	if (response.status == 200) {
 		hideLoader();
         document.getElementById("container").innerHTML = await showImage($("input[name=property_listing_id]").val());
-		if(result.status=='1'){
+      
+        if(result.status=='1'){
 			$parent.removeClass('show active');
 			$parent.next().addClass('show active');
 			$parent.find('.collapsible').removeClass('show');
@@ -175,15 +185,6 @@ showImage = async (property_id)=>{
             }
         })
         const results = await response.json();
-        if(results.status==2){
-            console.log('testing',results);
-            hideLoader();
-            toastr.success(results.msg);
-            toastr.success("Property Create Successfully !")
-            window.setTimeout(() => {
-                window.location.href=site_url+"/admin/property/list"; 
-             }, 2000);
-         }
         if(response.status==500){
             hideLoader();
             toastr.error(response.statusText);

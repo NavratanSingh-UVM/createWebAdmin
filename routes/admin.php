@@ -35,9 +35,6 @@ Route::middleware(['back-prevent-history','auth'])->group(function () {
         Route::get('list','list')->name('list');
         Route::get('create/{id?}','create')->name('create');
         Route::post('store','store')->name('store');
-        Route::get('edit/{id}','edit')->name('edit');
-        Route::post('update','update')->name('update');
-        Route::post('delete','destroy')->name('delete');
     });
     //Property listing
     Route::controller(PropertyListingController::class)->prefix('property')->name('property.')->group(function(){
@@ -75,15 +72,6 @@ Route::middleware(['back-prevent-history','auth'])->group(function () {
         Route::post('rate-manual-booking','rateManualBooking')->name('rate.manual.booking');
         Route::post('un-block-manual-booking','unBlockManualBooking')->name('unblock.manual.booking');
     });
-      //IcalLink
-    Route::controller(IcalLinkController::class)->prefix('icalLink')->name('icalLink.')->group(function(){
-        Route::get('list','list')->name('list');
-        Route::get('create','create')->name('create');
-        Route::post('store','store')->name('store');
-        Route::get('edit/{id}','edit')->name('edit');
-        Route::post('update','update')->name('update');
-        Route::post('delete','destroy')->name('delete');
-    });
       //Attraction
     Route::controller(AttractionController::class)->prefix('attraction')->name('attraction.')->group(function(){
         Route::get('list','list')->name('list');
@@ -93,14 +81,6 @@ Route::middleware(['back-prevent-history','auth'])->group(function () {
         Route::post('update','update')->name('update');
         Route::post('delete','destroy')->name('delete');
     });
-     //Aminities
-    Route::controller(AminitiesController::class)->prefix('amenities')->name('amenities.')->group(function(){
-      Route::get('list','list')->name('list');
-      Route::get('create/{id?}','create')->name('create');
-      Route::post('store','store')->name('store');
-      Route::post('delete','destroy')->name('delete');
-    });
-      //Review
       Route::controller(ReviewController::class)->prefix('review')->name('review.')->group(function(){
         Route::get('list','list')->name('list');
         Route::get('create','create')->name('create');
@@ -124,14 +104,11 @@ Route::middleware(['back-prevent-history','auth'])->group(function () {
         Route::get('list','list')->name('list');
         Route::get('create','create')->name('create');
         Route::post('store','store')->name('store');
-        Route::get('edit/{id}','edit')->name('edit');
-        Route::post('update','update')->name('update');
-        Route::post('delete','destroy')->name('delete');
      });
       //social link
       Route::controller(SocialMediaController::class)->prefix('social_link')->name('social_link.')->group(function(){
         Route::get('list','list')->name('list');
-        Route::get('create','create')->name('create');
+        Route::get('create/{id?}','create')->name('create');
         Route::post('store','store')->name('store');
         Route::get('edit/{id}','edit')->name('edit');
         Route::post('update','update')->name('update');
