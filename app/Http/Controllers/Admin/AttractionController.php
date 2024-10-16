@@ -64,16 +64,6 @@ class AttractionController extends Controller
         
     }
     public function store(Request $request){
-          // $rule = [
-        //     'ownerName'=>'required',
-        //     'Content'=>'required',
-        //     'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000'
-        // ];
-        // $validator = Validator::make($request->all(),$rule);
-        // if($validator->fails()) :
-        //     return redirect()->back()->withErrors($validator)->withInput();
-        // else:
-            // $status= Attraction::first();
             if($request->hasfile('image')):
                 $path = storage_path('public/upload/attraction/');
                 if(file_exists($path.$request->input('old_image'))):

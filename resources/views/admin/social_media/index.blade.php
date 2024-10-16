@@ -12,10 +12,10 @@
                     @include('flash-message.flash-message')
                     <div class="row">
                         <div class="col-md-6"><h4 style="color:black">Socail media link</h4></div>
-                       
+                       @if(empty($Data->id))
                         <div class="col-md-6 text-right"><a href="{{ route('admin.social_link.create') }}" class="btn mb-1 btn-primary float-right">Add Socail media link <span class="btn-icon-right"><i class="fa fa-plus"></i></span>
                         </a> </div>    
-                                                
+                     @endif                      
                     </div>
                 </div>
             </div> 
@@ -62,7 +62,7 @@
          searchPlaceholder: "Search records"
       },
       "bDestroy": true,
-      searching: true,
+      searching: false,
        ordering: false,
        paging: true,
        processing: true,
@@ -97,12 +97,9 @@
             console.log(err.message);
         }
     })
-    $(".search").on('click',function(){
-        table.draw();
-    })
   });
 //   state  Delete Method
-function socialDelete(id){
+function social_linkDelete(id){
     Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",

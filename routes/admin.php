@@ -83,22 +83,10 @@ Route::middleware(['back-prevent-history','auth'])->group(function () {
     });
       Route::controller(ReviewController::class)->prefix('review')->name('review.')->group(function(){
         Route::get('list','list')->name('list');
-        Route::get('create','create')->name('create');
+        Route::get('create/{id?}','create')->name('create');
         Route::post('store','store')->name('store');
-        Route::get('edit/{id}','edit')->name('edit');
-        Route::post('update','update')->name('update');
         Route::post('delete','destroy')->name('delete');
-     });
-      //Blog
-      Route::controller(BlogController::class)->prefix('blog')->name('blog.')->group(function(){
-        Route::get('list','list')->name('list');
-        Route::get('create','create')->name('create');
-        Route::post('store','store')->name('store');
-        Route::get('edit/{id}','edit')->name('edit');
-        Route::post('update','update')->name('update');
-        Route::post('delete','destroy')->name('delete');
-     });
-      
+     }); 
       //contact us
       Route::controller(ContactUsController::class)->prefix('contact_us')->name('contact_us.')->group(function(){
         Route::get('list','list')->name('list');
@@ -110,30 +98,10 @@ Route::middleware(['back-prevent-history','auth'])->group(function () {
         Route::get('list','list')->name('list');
         Route::get('create/{id?}','create')->name('create');
         Route::post('store','store')->name('store');
-        Route::get('edit/{id}','edit')->name('edit');
-        Route::post('update','update')->name('update');
         Route::post('delete','destroy')->name('delete');
      });
      //Additional features
      Route::controller(AdditionalFeaturesController::class)->prefix('additional_features')->name('additional_features.')->group(function(){
-        Route::get('list','list')->name('list');
-        Route::get('create','create')->name('create');
-        Route::post('store','store')->name('store');
-        Route::get('edit/{id}','edit')->name('edit');
-        Route::post('update','update')->name('update');
-        Route::post('delete','destroy')->name('delete');
-     });
-     //BookingDetails
-     Route::controller(BookingController::class)->prefix('booking')->name('booking.')->group(function(){
-        Route::get('list','list')->name('list');
-        Route::get('create','create')->name('create');
-        Route::post('store','store')->name('store');
-        Route::get('edit/{id}','edit')->name('edit');
-        Route::post('update','update')->name('update');
-        Route::post('delete','destroy')->name('delete');
-     });
-    //Tax Route
-      Route::controller(TaxController::class)->prefix('tax')->name('tax.')->group(function(){
         Route::get('list','list')->name('list');
         Route::get('create','create')->name('create');
         Route::post('store','store')->name('store');

@@ -11,21 +11,11 @@ use DataTables;
 class SocialMediaController extends Controller
 {
     public function list(Request $request){
+        $Data= SocialLink::first();
         if($request->ajax()):
              $social = SocialLink::get();
             return Datatables::of($social)
                 ->addIndexColumn()
-                // ->filter(function ($instance) use ($request) {
-                //     if($request->get('property_id') != ''):
-                //         $instance->where('id', $request->get('property_id'));
-                //     elseif($request->get('email') != ''):
-                //         $user = User::where('email',$request->get('email'))->first();
-                //         $instance->where('user_id', $user->id);
-                //     elseif($request->get('name') != ''):
-                //         $user = User::where('name',$request->get('name'))->first();
-                //         $instance->where('user_id', $user->id);
-                //     endif;
-                // })
                 ->addColumn('action', function($row){
                     $actionBtn = '<a href="'.route('admin.social_link.create',['id'=>encrypt($row->id)]).'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" onclick="social_linkDelete('.$row->id.')">Delete</a>';
                     return $actionBtn;
@@ -33,7 +23,7 @@ class SocialMediaController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         endif;
-       return view("admin.social_media.index");
+       return view("admin.social_media.index",compact('Data'));
     }
     public function create($id=null){
         $data = "";
@@ -44,7 +34,6 @@ class SocialMediaController extends Controller
         return view("admin.social_media.create",compact('data'));
     }
     public function store(Request $request){
-       
         $status=SocialLink::where('id',$request->input('SocialId'))->first();
       
         if($status==null):
@@ -57,7 +46,7 @@ class SocialMediaController extends Controller
             $Social_Link->social_status='1';
             $Social_Link->save();
         else:
-            $Social_Link = SocialLink::where('id',$request->input('social_id'))->update([
+            $Social_Link = SocialLink::where('id',$request->input('SocialId'))->update([
                 'facebook' =>$request->input('facebook'),
                 'twitter' =>$request->input('twitter'),
                 'linkdin'=>$request->input('linkdin'),
@@ -83,7 +72,6 @@ class SocialMediaController extends Controller
                   'msg' =>'Social Media link Not created successfully !'
               ]);
           }
-        
     }
    
 

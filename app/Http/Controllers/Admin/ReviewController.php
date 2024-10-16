@@ -5,96 +5,102 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
-use App\Models\ReviewDetails;
+use App\Models\ReviewDetail;
+use App\Models\PropertyListing;
 use DataTables;
+use Illuminate\Support\Str;
+
 
 class ReviewController extends Controller
 {
     public function list(Request $request){
         if($request->ajax()):
-            $tax = ReviewDetails::with('country')->with('state')->latest();
-            return Datatables::of($tax)
-                ->addIndexColumn()
-                ->addColumn('action', function($row){
-                    $actionBtn = '<a href="'.route('admin.review.edit',['id'=>encrypt($row->id)]).'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" onclick="taxDelete('.$row->id.')">Delete</a>';
-                    return $actionBtn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-        endif;
+           $review = ReviewDetail::with('reviews_rating')->get();
+           return Datatables::of($review)
+               ->addIndexColumn()
+               ->addColumn('action', function($row){
+                   $actionBtn = '<a href="'.route('admin.review.create',['id'=>encrypt($row->id)]).'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" onclick="reviewDelete('.$row->id.')">Delete</a>';
+                   return $actionBtn;
+               })
+               ->addColumn('propertyName',function($row){
+                return $row->reviews_rating->property_name;
+               })
+               ->editColumn('cust_review',function($row){
+                $wrappedText = Str::wordWrap($row->cust_review,50, "<br>\n", false);
+                return $wrappedText;
+               })
+               ->addColumn('status',function($row){
+                return (($row->status==1)?'Active':'InActive');
+               })
+               ->rawColumns(['action','propertyName','cust_review'])
+               ->make(true);
+       endif;
        return view("admin.review.index");
     }
-    public function create(Request $request){
-            return view("admin.review.create");
-    }
-    public function store(Request $request){
-        $rule = [
-            'country_id'=>'required',
-            'state_id'=>'required',
-            'tax'=>'required'
-        ];
-        $validator = Validator::make($request->all(),$rule);
-        if($validator->fails()) :
-            return redirect()->back()->withErrors($validator)->withInput();
-        else:
-            $tax = ReviewDetails::create([
-                'admin_id' =>$request->input('country_id'),
-                'about_video_url' =>$request->input('state_id'),
-                'about_heading'=>$request->input('tax'),
-                'about_content'=>$request->input('tax'),
-                'about_short_content'=>$request->input('tax'),
-                'about_inst_date'=>$request->input('tax'),
-                'about_update_date'=>$request->input('tax'),
-                'about_ip'=>$request->input('tax'),
-            ]);
-            if($tax):
-                return to_route('admin.review.list')->with('success','Carousel Created Successfully !');
-            else:
-                return redirect()->back()->with('error','Carousel Not created successfully');
-            endif;
-        endif;
-    }
-    public function edit($id) {
-        $countries = Country::get();
-        $states = State::get();
-        $data = Carousel::findOrFail(decrypt($id));
-        return view ('admin.review.edit',compact('countries','states','data'));
+
+    public function create($id=null){
+        $propertylist = PropertyListing::get();
+        $data = "";
+        if(!is_null($id)){
+            $data = ReviewDetail::where("id",decrypt($id))->with('reviews_rating')->first();
+         return view("admin.review.create",compact('data','propertylist'));
+        }
+        return view("admin.review.create",compact('data','propertylist'));
     }
 
-    public function Update(Request $request) {
-        $rule = [
-            'country_id'=>'required',
-            'state_id' => 'required',
-            'tax'=>'required'
-        ];
-        $validator = Validator::make($request->all(),$rule);
-        if($validator->fails()) :
-            return redirect()->back()->withErrors($validator)->withInput();
+    public function store(Request $request){
+        $status=ReviewDetail::where('id',$request->input('ReviewlId'))->first();
+        if($status==null):
+            $review=new ReviewDetail();
+            $review->property_id =$request->input('propertyId');
+            $review->cust_name =$request->input('customerName');
+            $review->heading=$request->input('heading');
+            $review->cust_review=$request->input('review');
+            $review->cust_place=$request->input('customerPlace');
+            $review->rating=$request->input('rating');
+            $review->status=$request->input('status');
+            $review->save();
         else:
-            $tax = ReviewDetails::where('id',decrypt($request->input('id')))->update([
-                'country_id' =>$request->input('country_id'),
-                'state_id' =>$request->input('state_id'),
-                'tax'=>$request->input('tax')
+            $review = ReviewDetail::where('id',$request->input('ReviewlId'))->update([
+                'property_id' =>$request->input('propertyId'),
+                'cust_name' =>$request->input('customerName'),
+                'heading'=>$request->input('heading'),
+                'cust_review'=>$request->input('review'),
+                'cust_place'=>$request->input('customerPlace'),
+                'rating'=>$request->input('rating'),
+                'status'=>$request->input('status'),
             ]);
-            if($tax):
-                return to_route('admin.review.list')->with('success','About us Updated Successfully !');
-            else:
-                return redirect()->back()->with('error','About us Not Updated successfully');
-            endif;
-        endif;
+        endif;  
+        if($status==null){
+                return response()->json([
+                  'status'=>200,
+                  'msg' =>'Review Created Successfully !'
+               ]);
+        }elseif($status==!null){
+               return response()->json([
+                   'status'=>200,
+                  'msg' =>'Review  Updated Successfully !'
+              ]);
+         
+        }else{
+              return response()->json([
+                  'status'=>500,
+                  'msg' =>'Review Not created successfully !'
+              ]);
+          }
     }
 
     public function destroy(Request $request){
-        $result = ReviewDetails::where('id',$request->input('id'))->delete();
+        $result = ReviewDetail::where('id',$request->input('id'))->delete();
         if($result):
             return response()->json([
                 'status'=>200,
-                'message'=>'About us  Delete Successfully'
+                'message'=>'Review Delete Successfully'
             ]);
         else:
             return response()->json([
                 'status'=>500,
-                'message'=>'About us Not Delete, Please Try again',
+                'message'=>'Review Not Delete, Please Try again',
             ]);
         endif;
 

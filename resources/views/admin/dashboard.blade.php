@@ -24,7 +24,7 @@
                     <div class="col-lg-3 col-sm-6">
                         <div class="card gradient-2">
                             <div class="card-body">
-                                <h3 class="card-title text-white" style="font-size: 16px">Total Feature Listing</h3>
+                                <h3 class="card-title text-white" style="font-size: 16px">Total Area Attractions</h3>
                                 <div class="d-inline-block">
                                     <h2 class="text-white">{{$featureListing}}</h2>
                                 </div>
@@ -36,9 +36,9 @@
                     <div class="col-lg-3 col-sm-6">
                         <div class="card gradient-3">
                             <div class="card-body">
-                                <h3 class="card-title text-white" style="font-size: 16px">Total Partner Listing</h3>
+                                <h3 class="card-title text-white" style="font-size: 16px">Total Booking</h3>
                                 <div class="d-inline-block">
-                                    <h2 class="text-white">{{$partnerListing}}</h2>
+                                    <h2 class="text-white">0</h2>
                                 </div>
                                 <span class="float-right display-5 opacity-5">
                                 </span>
@@ -48,9 +48,9 @@
                     <div class="col-lg-3 col-sm-6">
                         <div class="card gradient-4">
                             <div class="card-body">
-                                <h3 class="card-title text-white" style="font-size: 16px">Total Booking</h3>
+                                <h3 class="card-title text-white" style="font-size: 16px">Total Review</h3>
                                 <div class="d-inline-block">
-                                    <h2 class="text-white">{{$totalBooking}}</h2>
+                                    <h2 class="text-white">0</h2>
                                 </div>
                                 <span class="float-right display-5 opacity-5">
                                 </span>

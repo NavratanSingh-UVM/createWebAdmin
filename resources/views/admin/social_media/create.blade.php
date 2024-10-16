@@ -13,6 +13,8 @@
                 <h4 style="color:black">Social media link</h4>
                     @include('flash-message.flash-message')
                 </div>
+                 <div class="col-md-6 text-right"><a href="{{ route('admin...list') }}" class="btn mb-1 btn-primary float-right">Back <span class="btn-icon-right"><i class="fa fa-angle-double-left"></i></span>
+                </a> </div> 
             </div>
             <!-- row -->
             <div class="container-fluid">
@@ -26,7 +28,7 @@
                                         <div class="form-group row">
                                             <label class="col-lg-4 col-form-label" for="val-name">FaceBook</label>
                                               <div class="col-lg-6">
-                                               <input type="hidden" class="form-control" id="SocialId" name="SocialId" value="{{$data->social_id ?? ''}} ">
+                                               <input type="hidden" class="form-control" id="SocialId" name="SocialId" value="{{$data->id ?? ''}} ">
                                                 <input type="text" class="form-control" id="fb" name="facebook"  placeholder="Enter the facebook" value="{{$data->facebook ?? ''}} ">
                                                 <span class="tax text-danger"></span>  
                                             </div>

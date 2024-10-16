@@ -35,9 +35,9 @@ class PropertyListing extends Model
         return $this->belongsTo(PropertyType::class,'property_type_id');
     }
 
-    public function property_rates() {
-        return $this->hasMany(PropertyRates::class,'property_id','id');
-    }
+    // public function property_rates() {
+    //     return $this->hasMany(PropertyRates::class,'property_id','id');
+    // }
 
     public function user(){
         return $this->belongsTo(User::class,'user_id','id');
