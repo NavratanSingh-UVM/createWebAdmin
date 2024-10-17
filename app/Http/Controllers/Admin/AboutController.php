@@ -33,6 +33,11 @@ class AboutController extends Controller
     }
     
     public function store(Request $request){
+        $rules = ['heading' => 'required'];
+        $validator = Validator::make($request->all(), $rules);
+        if($validator->fails()){
+            return response()->json(['errors' => $validator->errors(),'msg'=>'heading is required !'],422);
+        }
             $status= AboutDetails::where('id',$request->input('about_id'))->first();
             if($request->hasfile('image')):
                 $path = storage_path('public/uploads/about_us/');

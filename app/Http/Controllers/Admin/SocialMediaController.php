@@ -34,8 +34,13 @@ class SocialMediaController extends Controller
         return view("admin.social_media.create",compact('data'));
     }
     public function store(Request $request){
+        // $rules = ['facebook' => 'required'];
+        // $validator = Validator::make($request->all(), $rules);
+        // if($validator->fails()){
+        //     return response()->json(['errors' => $validator->errors(),'msg'=>'facebook is required !'],422);
+        // }
+
         $status=SocialLink::where('id',$request->input('SocialId'))->first();
-      
         if($status==null):
             $Social_Link=new SocialLink();
             $Social_Link->facebook =$request->input('facebook');

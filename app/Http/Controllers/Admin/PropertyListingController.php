@@ -16,6 +16,7 @@ use App\Models\PropertyRates;
 use App\Models\PropertyBooking;
 use App\Models\PropertyListing;
 use App\Models\PropertiesAminites;
+use App\Models\ReviewDetail;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Requests\PropertyListing\PropertyRatesRequest;
 use App\Http\Requests\PropertyListing\PropertyListingRequestStepOne;
@@ -29,7 +30,6 @@ use Validator;
 
 class PropertyListingController extends Controller
 {
-   
     public function list(Request $request){
         if($request->ajax()):
             $propertyListing = PropertyListing::where('user_id',Auth::user()->id)->latest();
@@ -249,47 +249,6 @@ class PropertyListingController extends Controller
   
     }
   
-    // public function rentalPolicyStore(Request $request){
-  
-    //       $check_create =PropertyListing::where('id',$request->input('property_listing_id'))->pluck('cancelletion_policies_id')->first();
-    //       $file_name = "";
-    //       $cancel_rental_file_name ="";
-    //       if($request->hasFile('upload_rental_polices')):
-    //           $file = $request->file('upload_rental_polices');
-    //           $ext = $file->getClientOriginalExtension();
-    //           $file_name = uniqid().'.'.$ext;
-    //           $file->move(storage_path('app/public/upload/document/rental_policies/'),$file_name);
-    //       endif;
-    //       if($request->hasFile('upload_cancel_rental_polices')):
-    //           $file = $request->file('upload_cancel_rental_polices');
-    //           $ext = $file->getClientOriginalExtension();
-    //           $cancel_rental_file_name = uniqid().'.'.$ext;
-    //           $file->move(storage_path('app/public/upload/document/rental_policies/'),$cancel_rental_file_name);
-    //       endif;
-    //       $propertyListing = PropertyListing::where('id',$request->input('property_listing_id'))->update([
-    //           'rental_policies'=>$request->input("rental_policies"),
-    //           'upload_rental_polices'=>$file_name,
-    //           'upload_cancel_rental_polices'=>$cancel_rental_file_name,
-    //           'cancelletion_policies_id'=>$request->input("cancel_rental_polices")
-    //      ]);
-    //      if($check_create==null){
-    //       return response()->json([
-    //           'status'=>'2',
-    //           'msg'=>"Property Created Successfully !"
-    //       ]);  
-    //    }elseif($propertyListing && $check_create==!null){
-    //           return response()->json([
-    //               'property_id'=>$request->input('property_listing_id'),
-    //               'status'=>'1',
-    //                'msg'=>'update'
-    //           ]);
-    //    }else{
-    //           return response()->json([
-    //               'status'=>'0'
-    //           ]);
-    //       }
-  
-    // }
 
     public function locationInfoStore(Request $request) {
           $propertyListing = PropertyListing::where('id',$request->input('property_listing_id'))->update([
@@ -563,6 +522,7 @@ class PropertyListingController extends Controller
       // Property Delete Method
       public function deleteProperty(Request $request) {
           $propertyListing = PropertyListing::where('id',$request->input('id'))->delete();
+           ReviewDetail::where('property_id',$request->input('id'))->delete();
           if($propertyListing):
               return response()->json([
                   'status'=>'1',

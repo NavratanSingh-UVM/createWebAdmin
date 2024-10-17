@@ -80,7 +80,7 @@
             {data: 'facebook', name:'facebook',orderable: false},
             {data: 'twitter', name: 'twitter',orderable: false},
             {data: 'linkdin', name: 'linkdin',orderable: false},
-            {data: 'pinterest', name:'pinterest',orderable: false,defaultContent:919786123454},
+            {data: 'pinterest', name:'pinterest',orderable: false},
             {data: 'youtube', name:'youtube',orderable: false},
             {data: 'action', name: 'action',orderable: false},
         ],

@@ -25,6 +25,11 @@ class ContactUsController extends Controller
       }
       
       public function store(Request $request){
+        $rules = ['contactEmail' => 'required'];
+        $validator = Validator::make($request->all(), $rules);
+        if($validator->fails()){
+            return response()->json(['errors' => $validator->errors(),'msg'=>'Email is required !'],422);
+        }
               $status= ContactDetail::where('id',$request->input('contactId'))->first();
               if(empty($status)):
                  $data=new ContactDetail();

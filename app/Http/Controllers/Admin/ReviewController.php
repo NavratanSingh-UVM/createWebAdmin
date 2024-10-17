@@ -15,9 +15,14 @@ class ReviewController extends Controller
 {
     public function list(Request $request){
         if($request->ajax()):
-           $review = ReviewDetail::with('reviews_rating')->get();
+         $review = ReviewDetail::with('reviews_rating')->get();
            return Datatables::of($review)
                ->addIndexColumn()
+               ->filter(function ($instance) use ($request) {
+                if($request->get('property_id') != ''):
+                    $instance->where('id', $request->get('property_id'));
+                endif;
+            })
                ->addColumn('action', function($row){
                    $actionBtn = '<a href="'.route('admin.review.create',['id'=>encrypt($row->id)]).'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" onclick="reviewDelete('.$row->id.')">Delete</a>';
                    return $actionBtn;
@@ -49,6 +54,11 @@ class ReviewController extends Controller
     }
 
     public function store(Request $request){
+        $rules = ['review' => 'required'];
+        $validator = Validator::make($request->all(), $rules);
+        if($validator->fails()){
+            return response()->json(['errors' => $validator->errors(),'msg'=>'Customer Review is required !'],422);
+        }
         $status=ReviewDetail::where('id',$request->input('ReviewlId'))->first();
         if($status==null):
             $review=new ReviewDetail();

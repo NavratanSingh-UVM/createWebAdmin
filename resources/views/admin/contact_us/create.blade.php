@@ -105,6 +105,7 @@
                }
              },
              error: function(res) {
+                toastr.error(res.responseJSON.msg)
                }
             
         })

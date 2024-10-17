@@ -62,6 +62,11 @@ class AttractionController extends Controller
         
     }
     public function store(Request $request){
+        $rules = ['Attrheading' => 'required'];
+        $validator = Validator::make($request->all(), $rules);
+        if($validator->fails()){
+            return response()->json(['errors' => $validator->errors(),'msg'=>'Attraction Heading is required !'],422);
+        }
             if($request->hasfile('image')):
                 $path = storage_path('public/uploads/attraction/');
                 if(file_exists($path.$request->input('old_image'))):
