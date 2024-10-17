@@ -35,8 +35,8 @@
                                                 <div class="custom-file">
                                                  <input type="hidden" class="form-control" id="about_id" name="about_id" value="{{ $data->id ?? '' }}">
                                                    @if (!empty($data))
-                                                      <img src="{{ url('storage\uploads\about/' . $data->profile_img) }}" alt="" srcset="" height="200" width="400">
-                                                      <input type="hidden" name="old_image" value="{{$data->about_profile_img ?? ''}}">
+                                                      <img src="{{ url('storage\uploads\about/' . $data->img) }}" alt="" srcset="" height="200" width="400">
+                                                      <input type="hidden" name="old_image" value="{{$data->img ?? ''}}">
                                                    @else
                                                     <img src="{{ url('storage\uploads\about/default.png')}}"  id="prev" alt="" srcset="" height="200" width="400">  
                                                    @endif
@@ -47,10 +47,10 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val-username">Owner Name<span class="text-danger">*</span>
+                                            <label class="col-lg-4 col-form-label" for="val-username">Heading<span class="text-danger">*</span>
                                             </label>
                                              <div class="col-lg-6">
-                                                <input type="text" class="form-control" id="ownerName" name="ownerName" placeholder="Heading" value="{{$data->heading ?? ''}} ">
+                                                <input type="text" class="form-control" id="heading" name="heading" placeholder="Heading" value="{{$data->heading ?? ''}} ">
                                                 <span class="tax text-danger"></span>  
                                             </div>
                                         </div>

@@ -21,9 +21,7 @@ class AttractionController extends Controller
 {
     public function list(Request $request){
         if($request->ajax()):
-            
              $attraction = Attraction::get();
-            // $attraction = Attraction::latest();
             return Datatables::of($attraction)
                 ->addIndexColumn()
                 // ->filter(function ($instance) use ($request) {
@@ -82,14 +80,12 @@ class AttractionController extends Controller
             endif ;
             if($request->input('attr_id') ==null):
                 $data=new Attraction();	
-                $data->admin_id= Auth::user()->id;
                 $data->image= $originalImageName;
                 $data->heading=$request->input('Attrheading');
                 $data->content= $request->input('AttrContent');
                 $data->save();
             endif;
                 $data = Attraction::where('id',$request->input('attr_id'))->update([
-                    'admin_id' =>Auth::user()->id,
                     'image' => empty($originalImageName)?$request->input('old_image'):$originalImageName,
                     'heading' => $request->input('Attrheading'),
                     'content'=> $request->input('AttrContent')

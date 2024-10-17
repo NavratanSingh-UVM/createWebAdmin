@@ -9,9 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 class Attraction extends Model
 {
     use HasFactory;
-    protected $table='front_attraction';
+    protected $table='attraction_area';
     protected $fillable = [
-        'id',
-        'admin_id'
+        'id'
     ];
 }

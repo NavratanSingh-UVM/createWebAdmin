@@ -35,6 +35,10 @@ class AboutController extends Controller
     public function store(Request $request){
             $status= AboutDetails::where('id',$request->input('about_id'))->first();
             if($request->hasfile('image')):
+                $path = storage_path('public/upload/about_us/');
+                if(file_exists($path.$request->input('old_image'))):
+                    unlink($path.$request->input('old_image'));
+                 endif;
                 $image = $request->file('image');
                 $ext = "webp";
                 $thumbnail = Image::make($image->getRealPath())->resize(1000, 700, function ($constraint) {
@@ -48,16 +52,14 @@ class AboutController extends Controller
             endif;
             if($status ==null):
                 $aboutUs=new AboutDetails();
-                $aboutUs->admin_id= Auth::user()->id;
-                $aboutUs->profile_img= $originalImageName;
-                $aboutUs->heading=$request->input('ownerName');
+                $aboutUs->img= $originalImageName;
+                $aboutUs->heading=$request->input('heading');
                 $aboutUs->content= $request->input('Content');
                 $aboutUs->save();
             endif;
                 $aboutUs = AboutDetails::where('id',$request->input('about_id'))->update([
-                    'admin_id' =>Auth::user()->id,
-                    'profile_img' =>empty($originalImageName)?$status->about_profile_img:$originalImageName,
-                    'heading' => $request->input('ownerName'),
+                    'img' => empty($originalImageName)?$request->input('old_image'):$originalImageName,
+                    'heading' => $request->input('heading'),
                     'content'=> $request->input('Content')
                 ]);
 
