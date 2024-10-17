@@ -35,7 +35,7 @@ class AboutController extends Controller
     public function store(Request $request){
             $status= AboutDetails::where('id',$request->input('about_id'))->first();
             if($request->hasfile('image')):
-                $path = storage_path('public/upload/about_us/');
+                $path = storage_path('public/uploads/about_us/');
                 if(file_exists($path.$request->input('old_image'))):
                     unlink($path.$request->input('old_image'));
                  endif;

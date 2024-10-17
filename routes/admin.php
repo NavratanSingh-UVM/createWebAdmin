@@ -103,20 +103,10 @@ Route::middleware(['back-prevent-history','auth'])->group(function () {
      //Additional features
      Route::controller(AdditionalFeaturesController::class)->prefix('additional_features')->name('additional_features.')->group(function(){
         Route::get('list','list')->name('list');
-        Route::get('create','create')->name('create');
+        Route::get('create/{id?}','create')->name('create');
         Route::post('store','store')->name('store');
-        Route::get('edit/{id}','edit')->name('edit');
-        Route::post('update','update')->name('update');
-        Route::post('delete','destroy')->name('delete');
-     });
-     // user
-     Route::controller(UserManagementController::class)->group(function(){
-         Route::get('user-management','userMangement')->name('user.management');
-        Route::post('change-user-status','changeUserStatus')->name('change.user.status');
-    });
-     
+     }); 
 });
-
 
     Route::get('/ip',function (){
         dd(Request::ip(),$_SERVER);

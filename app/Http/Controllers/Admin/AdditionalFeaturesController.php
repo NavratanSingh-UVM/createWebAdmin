@@ -5,21 +5,28 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
-use App\Models\AdditionalSetting;
+use App\Models\User;
 use DataTables;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class AdditionalFeaturesController extends Controller
 {
     public function list(Request $request){
         if($request->ajax()):
-            $tax = AdditionalSetting::with('country')->with('state')->latest();
-            return Datatables::of($tax)
+            $data = User::get();
+            return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $actionBtn = '<a href="'.route('admin.additional_features.edit',['id'=>encrypt($row->id)]).'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" onclick="taxDelete('.$row->id.')">Delete</a>';
+                    $actionBtn = '<a href="'.route('admin.additional_features.create',['id'=>encrypt($row->id)]).'" class="edit btn btn-success btn-sm">Edit</a>';
                     return $actionBtn;
                 })
-                ->rawColumns(['action'])
+                ->addColumn('image',function($row) {
+                    return '<img src="'.url('storage/uploads/profile_image/'.$row->image).'" class=" rounded-circle mr-3" height="50" width="50">';
+                })
+                ->rawColumns(['action','image'])
                 ->make(true);
         endif;
        return view("admin.additional_features.index");
@@ -28,74 +35,55 @@ class AdditionalFeaturesController extends Controller
             return view("admin.additional_features.create");
     }
     public function store(Request $request){
-        $rule = [
-            'country_id'=>'required',
-            'state_id'=>'required',
-            'tax'=>'required'
-        ];
-        $validator = Validator::make($request->all(),$rule);
-        if($validator->fails()) :
-            return redirect()->back()->withErrors($validator)->withInput();
-        else:
-            $tax = AdditionalSetting::create([
-                'admin_id' =>$request->input('country_id'),
-                'about_video_url' =>$request->input('state_id'),
-                'about_heading'=>$request->input('tax'),
-                'about_content'=>$request->input('tax'),
-                'about_short_content'=>$request->input('tax'),
-                'about_inst_date'=>$request->input('tax'),
-                'about_update_date'=>$request->input('tax'),
-                'about_ip'=>$request->input('tax'),
-            ]);
-            if($tax):
-                return to_route('admin.additional_features.list')->with('success','Carousel Created Successfully !');
-            else:
-                return redirect()->back()->with('error','Carousel Not created successfully');
-            endif;
-        endif;
-    }
-    public function edit($id) {
-        $countries = Country::get();
-        $states = State::get();
-        $data = Carousel::findOrFail(decrypt($id));
-        return view ('admin.additional_features.edit',compact('countries','states','data'));
-    }
-
-    public function Update(Request $request) {
-        $rule = [
-            'country_id'=>'required',
-            'state_id' => 'required',
-            'tax'=>'required'
-        ];
-        $validator = Validator::make($request->all(),$rule);
-        if($validator->fails()) :
-            return redirect()->back()->withErrors($validator)->withInput();
-        else:
-            $tax = AdditionalSetting::where('id',decrypt($request->input('id')))->update([
-                'country_id' =>$request->input('country_id'),
-                'state_id' =>$request->input('state_id'),
-                'tax'=>$request->input('tax')
-            ]);
-            if($tax):
-                return to_route('admin.additional_features.list')->with('success','About us Updated Successfully !');
-            else:
-                return redirect()->back()->with('error','About us Not Updated successfully');
-            endif;
-        endif;
-    }
-
-    public function destroy(Request $request){
-        $result = AdditionalSetting::where('id',$request->input('id'))->delete();
-        if($result):
+        $rules = ['email' => 'required'];
+        $validator = Validator::make($request->all(), $rules);
+        if($validator->fails()){
+            return response()->json(['errors' => $validator->errors(),'msg'=>'Email is required !'],422);
+        }
+        $validator = Validator::make($request->all(), [
+            'newPassword' => 'required|string|min:8',
+            'confirmNewPassword' => 'required|string|same:newPassword',
+        ]);
+        if ($validator->fails()) {
             return response()->json([
-                'status'=>200,
-                'message'=>'About us  Delete Successfully'
+                'errors' => $validator->errors(),
+                'msg'=>'password and confirm password is not match !'
+            ], 422); // Unprocessable Entity
+        }
+            if($request->hasfile('image')):
+                $path = storage_path('public/upload/profile_image/');
+                if(file_exists($path.$request->input('old_image'))):
+                    unlink($path.$request->input('old_image'));
+                 endif;
+                $image = $request->file('image');
+                $ext = "webp";
+                $thumbnail = Image::make($image->getRealPath())->resize(1000, 700, function ($constraint) {
+                    $constraint->aspectRatio();
+                     $constraint->upsize();
+                 })->encode($ext,100);
+                $originalImageName = uniqid().'.'.$ext;
+                $thumbnailPath = public_path('storage/uploads/profile_image/');
+                $thumbnail->save($thumbnailPath . "" . $originalImageName);
+                $thumbnail->destroy();
+            endif;
+            $data = User::where('id',$request->input('user_id'))->update([
+                'name' =>$request->input('ProfileName'),
+                'email' =>$request->input('email'),
+                'phone'=>$request->input('phone'),
+                'image'=>empty($originalImageName)?$request->input('old_image'):$originalImageName,
+                'password'=>$request->input('newPassword')!=null?Hash::make($request->input('newPassword')):auth()->user()->password,
+                'show_password'=>$request->input('newPassword')!=null?$request->input('newPassword'):auth()->user()->show_password,
             ]);
-        else:
-            return response()->json([
-                'status'=>500,
-                'message'=>'About us Not Delete, Please Try again',
-            ]);
-        endif;
+            if($data):
+                return response()->json([
+                    'status'=>200,
+                    'msg' =>'Updated Successfully !'
+                 ]);
+            else:
+                return response()->json([
+                    'status'=>500,
+                    'msg' =>'Profile Not Updated successfully !'
+                ]);
+            endif;
     }
 }

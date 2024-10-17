@@ -50,7 +50,7 @@ class PropertyListingController extends Controller
                     return Helper::limit_text($row->property_name,2);
                 })
                 ->editColumn('property_main_photos',function($row) {
-                    return '<img src="'.url('storage/upload/property_image/main_image/'.$row->property_main_photos).'" class=" rounded-circle mr-3" height="50" width="50">';
+                    return '<img src="'.url('storage/uploads/property_image/main_image/'.$row->property_main_photos).'" class=" rounded-circle mr-3" height="50" width="50">';
                 })
                 ->addColumn('action', function($row){
                     $actionBtn = '<a href="'.route('admin.property.create',['id'=>base64_encode($row->id)]).'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" onclick="propertyDelete('.$row->id.')">Delete</a>';
@@ -85,16 +85,16 @@ class PropertyListingController extends Controller
     public function store(PropertyListingRequestStepOne $request){
         
         if($request->hasfile('property_main_image')):
-           $path = storage_path('public/upload/property_image/main_image/');
+           $path = storage_path('public/uploads/property_image/main_image/');
            if(file_exists($path.$request->input('property_old_image'))):
               unlink($path.$request->input('property_old_image'));
            endif;
             $image = $request->file('property_main_image');
             $ext = "webp";
            $originalImageName = uniqid().'.'.$ext;
-           $imagePath = $image->move(public_path('storage/upload/property_image/main_image/'), $originalImageName);
+           $imagePath = $image->move(public_path('storage/uploads/property_image/main_image/'), $originalImageName);
            $thumbnailName = $originalImageName;
-          $thumbnailPath = public_path('storage/upload/property_image/main_image/');
+          $thumbnailPath = public_path('storage/uploads/property_image/main_image/');
            if (!file_exists($thumbnailPath)) {
             mkdir($thumbnailPath, 0777, true);
           }
@@ -327,9 +327,9 @@ class PropertyListingController extends Controller
                           $constraint->aspectRatio();
                            $constraint->upsize();
                        })->encode($ext,100);
-                      $thumbnailPath = public_path('storage/upload/property_image/gallery_image/');
-                      $imagePath = $image->move(public_path('storage/upload/property_image/gallery_image/'), $originalImageName);
-                      $thumbnailPath = public_path('storage/upload/property_image/main_image/');
+                      $thumbnailPath = public_path('storage/uploads/property_image/gallery_image/');
+                      $imagePath = $image->move(public_path('storage/uploads/property_image/gallery_image/'), $originalImageName);
+                      $thumbnailPath = public_path('storage/uploads/property_image/main_image/');
                       if (!file_exists($thumbnailPath)) {
                         mkdir($thumbnailPath, 0777, true);
                     }

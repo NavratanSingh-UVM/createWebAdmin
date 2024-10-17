@@ -63,7 +63,7 @@ class AttractionController extends Controller
     }
     public function store(Request $request){
             if($request->hasfile('image')):
-                $path = storage_path('public/upload/attraction/');
+                $path = storage_path('public/uploads/attraction/');
                 if(file_exists($path.$request->input('old_image'))):
                    unlink($path.$request->input('old_image'));
                 endif;
