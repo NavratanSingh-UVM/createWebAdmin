@@ -56,14 +56,20 @@
                         <li class="icons dropdown">
                             <div class="user-img c-pointer position-relative"   data-toggle="dropdown">
                                 <span class="activity active"></span>
-                                <img src="{{ asset('assets/images/user/1.png') }}" height="40" width="40" alt="">
+                                 @if(auth()->user()->image !=null)
+                                  <img src="{{ url('storage\uploads\profile_image/' .auth()->user()->image) }}" alt="" srcset="" height="40" width="40">
+                                    <input type="hidden" name="old_image" value="{{auth()->user()->image ?? ''}}">
+                                    @else
+                                    <img src="{{ asset('owner-assets/img/profile.png') }}" alt="My Profile" class="w-25">
+                                @endif
                             </div>
+                             
                             <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">
                                 <div class="dropdown-content-body">
                                     <ul>
-                                        <li>
+                                        {{-- <li>
                                             <a href="{{route('admin.edit.profile')}}"><i class="icon-user"></i> <span>Profile</span></a>
-                                        </li>
+                                        </li> --}}
                                         <hr class="my-2">
                                        
                                         <li><a href="{{ route('admin.logout') }}"><i class="icon-key"></i> <span>Logout</span></a></li>

@@ -13,7 +13,7 @@
                 <h4 style="color:black">Social media link</h4>
                     @include('flash-message.flash-message')
                 </div>
-                 <div class="col-md-6 text-right"><a href="{{ route('admin..list') }}" class="btn mb-1 btn-primary float-right">Back <span class="btn-icon-right"><i class="fa fa-angle-double-left"></i></span>
+                 <div class="col-md-6 text-right"><a href="{{ route('admin.social_link.list') }}" class="btn mb-1 btn-primary float-right">Back <span class="btn-icon-right"><i class="fa fa-angle-double-left"></i></span>
                 </a> </div> 
             </div>
             <!-- row -->

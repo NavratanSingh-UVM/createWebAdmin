@@ -10,6 +10,10 @@ Admin Auth Route start
 Route::controller(AuthController::class)->middleware(['back-prevent-history','guest'])->group(function () {
     Route::get('/','index')->name('login');
     Route::post('login','doLogin')->name('check.creditials');
+});
+Route::controller(AuthController::class)->middleware(['back-prevent-history','guest'])->group(function () {
+    Route::get('/','index')->name('login');
+    Route::post('login','doLogin')->name('check.creditials');
     Route::get('/forget-password','forgetPassword')->name('forget.password');
     Route::post('/forget-password-send-link','sendForgetPasswordLink')->name('send.forget.password.link');
     Route::get('reset-password/{token}','resetPassword')->name('reset.password.get');

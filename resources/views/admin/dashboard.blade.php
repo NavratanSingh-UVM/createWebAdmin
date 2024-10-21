@@ -26,7 +26,7 @@
                             <div class="card-body">
                                 <h3 class="card-title text-white" style="font-size: 16px">Total Area Attractions</h3>
                                 <div class="d-inline-block">
-                                    <h2 class="text-white">{{$featureListing}}</h2>
+                                    <h2 class="text-white">{{$totalAttraction}}</h2>
                                 </div>
                                 <span class="float-right display-5 opacity-5">
                                 </span>
@@ -50,7 +50,7 @@
                             <div class="card-body">
                                 <h3 class="card-title text-white" style="font-size: 16px">Total Review</h3>
                                 <div class="d-inline-block">
-                                    <h2 class="text-white">0</h2>
+                                    <h2 class="text-white">{{$reviewListing}}</h2>
                                 </div>
                                 <span class="float-right display-5 opacity-5">
                                 </span>
@@ -77,7 +77,7 @@
                                             <tbody>
                                                 @foreach ($users as $user)
                                                     <tr>
-                                                        <td><img src="@if($user->image ==null){{ asset('assets/images/avatar/1.jpg') }} @else {{url('public/storage/profile_image/'.$user->image) }} @endif" class=" rounded-circle mr-3" alt="">{{$user->name}}</td>
+                                                        <td>{{$user->name}}</td>
                                                         <td>{{$user->email}}</td>
                                                         <td>
                                                             <span>{{$user->phone}}</span>

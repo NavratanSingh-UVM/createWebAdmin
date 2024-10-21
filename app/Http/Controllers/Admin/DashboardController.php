@@ -7,6 +7,8 @@ use Session;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\ClientDetail;
+use App\Models\ReviewDetail;
+use App\Models\Attraction;
 use App\Models\PropertyListing;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -16,16 +18,17 @@ class DashboardController extends Controller
 {
     public function index () {
         $totalProperties = PropertyListing::count();
-        $featureListing = PropertyListing::where('feature','1')->count();
-        // $partnerListing = ClientDetail::count();
+        $totalAttraction = Attraction::count();
+        $reviewListing = ReviewDetail::count();
         // $totalBooking = BookingDetail::where('book_status','1')->count();
         $users = User::whereHas('roles',function($q){
             $q->whereNot('name','super-admin');
         })->latest()->take(10)->get();
-        return view('admin.dashboard',compact('totalProperties','featureListing','users'));
+        return view('admin.dashboard',compact('totalProperties','totalAttraction','reviewListing','users'));
     }
 
-    public function editProfile(){
+    public function editProfile(Request $request){
+        dd($request->all());
     return view('admin.edit-profile');
     }
     
@@ -66,6 +69,6 @@ class DashboardController extends Controller
     public function logout() {
         Session::flush();
         Auth::logout();
-        return to_route('login');
+        return to_route('admin.login');
     }
 }

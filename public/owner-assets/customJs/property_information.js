@@ -45,8 +45,8 @@ $(".property_information").on("click",function(e){
     formData.append("address",$("input[name='address']").val());
     formData.append("town",$("input[name='town']").val());
     formData.append("zipcode",$("input[name='zipcode']").val());
-    formData.append("property_old_image",$("input[name=old_image]").val());
-    formData.append("youtube_video_link",$("input[name=youtube_video_link]").val());
+    formData.append("property_old_image",$("input[name=property_old_image]").val());
+    
     $.ajax({
         url:site_url+"/admin/property/store",
         type:"POST",
