@@ -36,7 +36,7 @@
                 </div>
             </div>
             <!-- banner bg -->
-            <div class="banner-bg" style="background-image: {{url('assets/img/slider2.jpg')}}"></div>
+            <div class="banner-bg" style="background-image: url({{url('frontend-assets/img/slider2.jpg')}})"></div>
             <div class="banner-overly"></div>
         </div>
     </section>
@@ -83,9 +83,9 @@
                     <div class="abour-text pl-50 pr-50">
                         <div class="section-title mb-30">
                             <span class="title-tag">about us</span>
-                            <h2>Discover Our Muskoka.</h2>
+                            <h2>{{$aboutUs->heading}}</h2>
                         </div>
-                        <p>Make great memories at our new Muskoka lakefront retreat on beautiful Doe lake! short drive from Huntsville. Enjoy 2 acres of exclusive paradise with virgin forest on one side and lake on the other. As a bonus, guests can explore over 30 acres of Northwood beach Estate wilderness that guests have access to.</p>
+                        <p>{!!$aboutUs->content!!}</p>
                         <a href="#" class="main-btn btn-filled mt-40"> Learn More</a>
                     </div>
                 </div>
@@ -93,7 +93,9 @@
         </div>
         <div class="about-right-bottom">
             <div class="about-bottom-img">
-                <img src="{{('frontend-assets/img/bg/03.jpg')}}" alt="">
+              <img src="{{ url('storage\uploads\about/' . $aboutUs->img) }}" alt="">
+
+                {{-- <img src="{{('frontend-assets/img/bg/03.jpg')}}" alt=""> --}}
             </div>
         </div>
     </section>
@@ -117,26 +119,28 @@
             </div>
             <!-- Room Looop -->
             <div class="row room-gird-loop mt-80 feature-room-slider">
+            @foreach ($PropertyListing as $propertyList)
                 <div class="col-lg-6">
                     <div class="room-box">
                         <div class="room-img-wrap">
-                            <div class="room-img" style="background-image: url({{url('frontend-assets/img/property1.jpg')}})"></div>
+                         <div class="room-img" style="background-image: url({{url('storage/uploads/property_image/main_image/'. $propertyList->property_main_photos)}})"></div>
                         </div>
                         <div class="room-desc">
                             <ul class="icons">
-                                <li>15 Guests</li>
-                                <li>4 Bedrooms</li>
-                                <li>9 Beds</li>
-                                <li>3 Baths</li>
+                                <li>{{$propertyList->after_guest}} Guests</li>
+                                <li>{{$propertyList->bedrooms}}</li>
+                                <li>{{$propertyList->sleeps}} Beds</li>
+                                <li>{{$propertyList->baths}}Baths</li>
                             </ul>
-                            <h4 class="title"><a href="#">Muskoka Cottage On Baylake</a></h4>
-                            <p>Amazing waterfront retreat! Relax with the whole family at our Hot Tub/Spa (opens April 7th) and whole  day sun exposure. Cottage right on lakefront with crystal clear water</p>
-                            <span class="price">$345/Night</span>
+                            <h4 class="title"><a href="#">{{$propertyList->property_name}}</a></h4>
+                            <p>{!!$propertyList->description!!}</p>
+                            <span class="price">${{$propertyList->avg_night_rates}}/{{$propertyList->avg_rate_unit}}</span>
                             <a href="#" class="book-btn">Booking Now</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
+             @endforeach
+                {{-- <div class="col-lg-6">
                     <div class="room-box">
                         <div class="room-img-wrap">
                         
@@ -155,7 +159,7 @@
                             <a href="#" class="book-btn">Booking Now</a>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </section>
@@ -189,64 +193,18 @@
             </div>
             <!-- Latest post loop -->
             <div class="row latest-post-slider mt-80">
-                <div class="col-lg-4">
+            @foreach ($attractionArea as $attractions )
+                 <div class="col-lg-4">
                     <div class="latest-post-box">
-                        <div class="post-img" style="background-image: url({{url('frontend-assets/img/a1.jpg')}})"></div>
+                        <div class="post-img" style="background-image:url({{url('storage/uploads/attraction/'.$attractions->image)}})"></div>
                         <div class="post-desc">
-                            <h4><a href="#">Niagara-on-the-Lake, Ontario</a></h4>
-                            <p>This picturesque lakefront town near Niagara Falls is especially popular with oenophiles. Sample wines from a few local makers, then spend time strolling in Historic Old Town, which is lined with charming mom-and-pop shops, boutiques, bakeries, and eateries.</p>
+                            <h4><a href="#">{{$attractions->heading}}</a></h4>
+                            <p>{!!$attractions->content!!}</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="latest-post-box">
-                        <div class="post-img" style="background-image: url({{url('frontend-assets/img/a2.jpg')}})"></div>
-                        <div class="post-desc">
-                            <h4><a href="#">Tofino, British Columbia</a></h4>
-                            <p>A quick 45-minute flight from Vancouver, Tofino is an outdoor lover’s oasis. Thompson says that, no matter your experience level, you can enjoy hiking, year-round surfing, kayaking, and paddle boarding here. You’ll also find several stunning stretches of sand, including the nearly 10-mile-long Long Beach.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="latest-post-box">
-                        <div class="post-img" style="background-image: url({{url('frontend-assets/img/a3.jpg')}})"></div>
-                        <div class="post-desc">
-                            <h4><a href="#">Gros Morne National Park, Newfoundland</a></h4>
-                            <p>Renshaw calls this national park and UNESCO World Heritage Site “stunning for the outdoor lover.” Park visitors can explore awe-inspiring fjords on foot or mountain bike, or via boat or kayak, and wildlife spotting opportunities abound. The park is also a Dark Sky Preserve, making it an excellent stargazing spot.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="latest-post-box">
-                        <div class="post-img" style="background-image: url({{url('frontend-assets/img/a4.jpg')}})"></div>
-                        <div class="post-desc">
-                            <h4><a href="#">Annapolis Valley, Nova Scotia</a></h4>
-                            <p>Annapolis Valley, situated in Nova Scotia’s countryside, is surrounded by rolling fields and vineyards, quaint towns, and scenic hiking trails. Per Renshaw, it’s also “becoming a well-known wine destination.”</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="latest-post-box">
-                        <div class="post-img" style="background-image: url({{url('frontend-assets/img/a5.jpg')}})"></div>
-                        <div class="post-desc">
-                            <h4><a href="#">South Shore, Nova Scotia</a></h4>
-                            <p>According to Renshaw, Nova Scotia’s South Shore is “host to beautiful towns like Lunenburg and Mahone Bay.” In Lunenberg, stroll though Old Town, a UNESCO World Heritage Site, to take in its colorful historic buildings, waterfront views, and eclectic shops. </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4">
-                    <div class="latest-post-box">
-                    
-
-                        <div class="post-img" style="background-image: url({{url('frontend-assets/img/a6.jpg')}})"></div>
-                        <div class="post-desc">
-                            <h4><a href="#">Quebec City, Quebec</a></h4>
-                            <p>For a taste of France in North America, head to Quebec City, an urban center that's more than "400 years old, which is older than Canada itself,” says Renshaw. The picturesque city is known for its cobblestone streets, eye-catching European architecture, and an enchanting Old Town ...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endforeach 
+             </div>  
         </div>
     </section>
     <!--====== LATEST NEWS END ======-->

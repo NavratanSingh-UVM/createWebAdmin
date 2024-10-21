@@ -37,12 +37,12 @@ Route::namespace('Frontend')->group(function() {
         Route::get('/property-details','propertyDetial')->name('property.details');
         Route::get('/activities-attractions','activitiesAttractions')->name('activities.attractions');
         Route::get('/property-listing','propertyListing')->name('property.listing');
-        Route::get('/about-us','aboutUs')->name('abouts');
-        Route::get('/list-our-property','listOurProperty')->name('list.our.property');
-        Route::post('/sugesstion-destination','destintaionSuggestion')->name('destination.suggestion');
-        Route::get('/partner-listing','partnerListing')->name('partner.listing');
-        Route::post('/calender','calender');
-        Route::get('/property/ical-link/{id}','genratePropertIcalLink');
+        // Route::get('/about-us','aboutUs')->name('abouts');
+        // Route::get('/list-our-property','listOurProperty')->name('list.our.property');
+        // Route::post('/sugesstion-destination','destintaionSuggestion')->name('destination.suggestion');
+        // Route::get('/partner-listing','partnerListing')->name('partner.listing');
+        // Route::post('/calender','calender');
+        // Route::get('/property/ical-link/{id}','genratePropertIcalLink');
     });
     Route::controller('PropertyListingController')->group(function () {
         Route::get('/property-details/p{id}','propertyListingDetails')->name("property.listing.details");
@@ -71,25 +71,6 @@ Route::namespace('Frontend')->group(function() {
         })->name('payment.failed');
     });
 
-    Route::controller(ChatController::class)->group(function(){
-        Route::get('/chat','chat')->name('chat');
-        Route::get('/get-user','getUser');
-        Route::post('/insert-chat','InsertChat');
-        Route::post('/get-chat','getChat');
-        Route::get('/owner/chat/scheduled-message/{id}','scheduledMessage')->name('owner.chat.sheduled.message');
-        Route::get('/owner/chat/edit-template','editTemplate')->name('owner.chat.edit.template');
-        Route::get('/owner/chat/scheduled-message/listing/{id}','templateListing')->name('owner.chat.sheduled.message.listing');
-        Route::get('/owner/chat/quick-replies','quickReplies')->name('owner.chat.quick-replies');
-        Route::get('/owner/chat/create-template/{user_id}','createTemplate')->name('owner.chat.create.template');
-        Route::POST('/owner/chat/delete-template','destroy')->name('owner.chat.delete.template');
-        Route::post('/owner/chat/template-store','store')->name('owner.chat.template.stote');
-    });
-
-    Route::controller(CancelBookingController::class)->prefix('cancel-booking')->group(function(){
-        Route::get('cancel/{cancel_id}','cancelBooking')->name('cancel.booking');
-        Route::post('/store','cancelBookingStore')->name('cancel.booking.store');
-        Route::get('/list','cancelBookingList')->name('cancel.bokking.list');
-    });
 });
 /* 
 Admin Auth Route end

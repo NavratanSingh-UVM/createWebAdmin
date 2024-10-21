@@ -11,8 +11,8 @@
                          </div>
                          <p>Our cottage is one a kind on a big and beautiful lake. Sunrises are spectacular and the cottage is very private. There are 5 large size bedrooms and four bedrooms have full ensuites. Three bedroom have full lakeviews.</p>
                          <div class="social-links mt-20">
-                             <a href="#"><i class="fab fa-facebook-f"></i></a>
-                             <a href="#"><i class="fab fa-instagram"></i></a>
+                             <a href="{{url($socialMedia->facebook)}}" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                             <a href="{{url($socialMedia->linkdin)}}" target="_blank"><i class="fab fa-instagram"></i></a>
                          </div>
                      </div>
                  </div>
@@ -46,7 +46,7 @@
                                  </div>
                                  <div class="desc">
                                      <h6 class="title">Phone Number</h6>
-                                     +1 647-778-3383
+                                    {{$ContactUs->contact_phone}}
                                  </div>
                              </div>
                              <div class="contact-box">
@@ -55,7 +55,7 @@
                                  </div>
                                  <div class="desc">
                                      <h6 class="title">Email Address</h6>
-                                     <a href="mailto:alokpaliwal@yahoo.com">alokpaliwal@yahoo.com</a>
+                                     <a href="mailto:alokpaliwal@yahoo.com">{{$ContactUs->contact_email}}</a>
                                  </div>
                              </div>
                              <div class="contact-box">
@@ -64,7 +64,7 @@
                                  </div>
                                  <div class="desc">
                                      <h6 class="title">Address</h6>
-                                     Emsdale, Canada
+                                  {{$ContactUs->contact_addr}}
                                  </div>
                              </div>
                          </div>
@@ -77,7 +77,7 @@
          <div class="container">
              <div class="row align-items-center">
                  <div class="col-lg-6 col-md-5 order-2 order-md-1">
-                     <p class="copyright-text copyright-two">Copyright © 2023 | Alok Paliwal | All rights reserved</p>
+                     <p class="copyright-text copyright-two">Copyright © 2024 | Alok Paliwal | All rights reserved</p>
                  </div>
                  <div class="col-lg-6 col-md-7 order-1 order-md-2">
                      <div class="footer-menu text-end">

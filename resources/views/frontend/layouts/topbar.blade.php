@@ -9,8 +9,6 @@
                     <div class="navbar-close">
                         <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
                     </div>-->
-
-
                     <!-- Mneu Items -->
                     <div class="menu-items">
                         <ul>
@@ -48,14 +46,14 @@
                             <i class="fal fa-phone"></i>
                             <span>Phone Number</span>
                             <a href="tel:+6477783383">
-                                <h5 class="title">+1 647-778-3383</h5>
+                                <h5 class="title">{{$ContactUs->contact_phone}}</h5>
                             </a>
                         </div>
                         <div class="item">
                             <i class="fal fa-envelope"></i>
                             <span>Email Address</span>
                             <a href="mailto:alokpaliwal@yahoo.com">
-                                <h5 class="title">alokpaliwal@yahoo.com</h5>
+                                <h5 class="title">{{$ContactUs->contact_email}}</h5>
                             </a>
                         </div>
                     </div>
