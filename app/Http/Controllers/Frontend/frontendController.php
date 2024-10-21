@@ -17,7 +17,7 @@ class frontendController extends Controller
     public function index() {
         $aboutUs         = AboutDetails::first();
         $attractionArea  = Attraction::get();
-        $PropertyListing = PropertyListing::get();
+        $PropertyListing = PropertyListing::where('status','1')->get();
         $ContactUs       = ContactDetail::first();
         $socialMedia     = SocialLink::first();
         return view("frontend.index",compact('aboutUs','attractionArea','PropertyListing','ContactUs','socialMedia'));
