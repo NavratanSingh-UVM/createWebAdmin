@@ -7,7 +7,7 @@
                      <!-- Site Info Widget -->
                      <div class="widget site-info-widget mb-20">
                          <div class="footer-logo mb-50">
-                             <img src="{{('frontend-assets/img/footer-logo.png')}}" alt="Logo">
+                             <img src="{{asset('frontend-assets/img/footer-logo.png')}}" alt="Logo">
                          </div>
                          <p>Our cottage is one a kind on a big and beautiful lake. Sunrises are spectacular and the cottage is very private. There are 5 large size bedrooms and four bedrooms have full ensuites. Three bedroom have full lakeviews.</p>
                          <div class="social-links mt-20">
@@ -22,15 +22,18 @@
                          <div>
                              <h4 class="widget-title">Quick Links</h4>
                              <ul>
-                                 <li><a href="javascript:void(0)">Emsdale, Canada</a></li>
-                                 <li><a href="javascript:void(0)">Ryerson, Canada</a></li>
-                                 <li><a href="javascript:void(0)">About Owner</a></li>
-                                 <li><a href="javascript:void(0)">About Canada</a></li>
-                                 <li><a href="javascript:void(0)">Activities</a></li>
+                                 {{-- <li><a href="javascript:void(0)">Emsdale, Canada</a></li> --}}
+                                   @foreach ($PropertyListing as $propertyList )
+                                    <li><a href="{{route('frontend.property.details')}}">{{$propertyList->property_name}}</a></li>
+                                     @endforeach
+                                 {{-- <li><a href="javascript:void(0)">Ryerson, Canada</a></li> --}}
+                                 {{-- <li><a href="{{route('frontend.aboutUs')}}">About Owner</a></li> --}}
+                                 {{-- <li><a href="javascript:void(0)">About Canada</a></li> --}}
+                                 {{-- <li><a href="javascript:void(0)">Activities</a></li>
                                  <li><a href="javascript:void(0)">Attractions</a></li>
-                                 <li><a href="javascript:void(0)">Amenities</a></li>
+                                 <li><a href="javascript:void(0)">Amenities</a></li> --}}
                                  <li><a href="javascript:void(0)">Book & Enquiry</a></li>
-                                 <li><a href="javascript:void(0)">Contact Us</a></li>
+                                 <li><a href="{{route('frontend.contact.us')}}">Contact Us</a></li>
                              </ul>
                          </div>
                      </div>

@@ -12,4 +12,7 @@ class AboutDetails extends Model
     protected $fillable = [
         'id'
     ];
+    public function aboutUs_gallery_image() {
+        return $this->hasMany(Gallery::class,'about_id')->orderBy('image_order', 'ASC');
+    }
 }

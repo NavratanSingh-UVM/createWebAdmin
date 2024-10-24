@@ -44,39 +44,19 @@
 
 
     <!--====== ABOUT SECTION START ======-->
+    
     <section class="about-section pt-50 pb-50">
         <div class="container">
             <div class="row align-items-center justify-content-center">
                 <div class="col-lg-6 col-md-10 wow fadeInLeft" data-wow-delay=".3s">
                     <div class="row about-features-boxes fetaure-masonary">
-                        <div class="col-sm-6">
-                            <div class="single-feature-box">
-                                <div class="icon">
-                                    <i class="flaticon-team"></i>
-                                </div>
-                                <h4><a href="#">Cottage</a></h4>
-                                <p>Canoe and kayaks are available for guests use.</p>
-                            </div>
-                        </div>
+                        @foreach ( $aboutUs->aboutUs_gallery_image->slice(1, 5) as $photo )
                         <div class="col-sm-6">
                             <div class="single-feature-box only-bg mt-30"
-                                style="background-image: url({{url('frontend-assets/img/homeabout1.jpg')}})">
+                                style="background-image: url({{ url('storage/uploads/about/' .$photo->image_name) }})">
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="single-feature-box only-bg mt-30"
-                                style="background-image: url({{url('frontend-assets/img/homeabout2.jpg')}})">
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="single-feature-box dark mt-30">
-                                <div class="icon">
-                                    <i class="flaticon-hotel"></i>
-                                </div>
-                                <h4><a href="#">Lakefront</a></h4>
-                                <p>Make great memories at our new Muskoka lakefront retreat</p>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-8 col-sm-10 wow fadeInRight" data-wow-delay=".3s">
@@ -93,8 +73,9 @@
         </div>
         <div class="about-right-bottom">
             <div class="about-bottom-img">
-              <img src="{{ url('storage\uploads\about/' . $aboutUs->img) }}" alt="">
-
+              @foreach (  $aboutUs->aboutUs_gallery_image->slice(0, 1) as $photo)
+               <img src="{{ url('storage/uploads/about/' . $photo->image_name) }}" alt="">
+              @endforeach
                 {{-- <img src="{{('frontend-assets/img/bg/03.jpg')}}" alt=""> --}}
             </div>
         </div>
@@ -130,7 +111,7 @@
                                 <li>{{$propertyList->after_guest}} Guests</li>
                                 <li>{{$propertyList->bedrooms}}</li>
                                 <li>{{$propertyList->sleeps}} Beds</li>
-                                <li>{{$propertyList->baths}}Baths</li>
+                                <li>{{$propertyList->baths}} Baths</li>
                             </ul>
                             <h4 class="title"><a href="#">{{$propertyList->property_name}}</a></h4>
                             <p>{!!$propertyList->description!!}</p>
@@ -208,12 +189,10 @@
         </div>
     </section>
     <!--====== LATEST NEWS END ======-->
-
-
     <!--====== Back to Top ======-->
     <a href="#" class="back-to-top" id="backToTop">
         <i class="fal fa-angle-double-up"></i>
     </a>
-    
+@endsection
 
     

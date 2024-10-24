@@ -18,7 +18,6 @@
     </section>
     <!--====== BREADCRUMB PART END ======-->
 
-
     <!--====== CONTACT PART START ======-->
     <section class="contact-part pt-115 pb-115">
         <div class="container">
@@ -32,7 +31,7 @@
                             </div>
                             <div class="desc">
                                 <h4>Office Address</h4>
-                                <p>Emsdale, Canada</p>
+                                <p>{{$ContactUs->contact_addr}}</p>
                             </div>
                         </div>
                     </div>
@@ -43,7 +42,7 @@
                             </div>
                             <div class="desc">
                                 <h4>Phone Number</h4>
-                                <p>+1 6477783383</p>
+                                <p>{{$ContactUs->contact_phone}}</p>
                             </div>
                         </div>
                     </div>
@@ -54,7 +53,7 @@
                             </div>
                             <div class="desc">
                                 <h4>Email Address</h4>
-                                <p>alokpaliwal@yahoo.com</p>
+                                <p>{{$ContactUs->contact_email}}</p>
                             </div>
                         </div>
                     </div>
@@ -120,13 +119,9 @@
     </section>
     <!--====== CONTACT PART END ======-->
 
-
-
-
-
     <!--====== Back to Top ======-->
     <a href="#" class="back-to-top" id="backToTop">
         <i class="fal fa-angle-double-up"></i>
     </a>
-
+@endsection
     

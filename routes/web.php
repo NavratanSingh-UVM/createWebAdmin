@@ -25,11 +25,6 @@ Route::controller(AuthController::class)->middleware(['back-prevent-history','gu
 
 });
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-
 Route::namespace('Frontend')->group(function() {
     Route::controller('FrontendController')->name('frontend.')->group(function() {
         Route::get('/','index')->name('index');
@@ -37,7 +32,7 @@ Route::namespace('Frontend')->group(function() {
         Route::get('/property-details','propertyDetial')->name('property.details');
         Route::get('/activities-attractions','activitiesAttractions')->name('activities.attractions');
         Route::get('/property-listing','propertyListing')->name('property.listing');
-        // Route::get('/about-us','aboutUs')->name('abouts');
+        Route::get('/about-us','aboutUs')->name('aboutUs');
         // Route::get('/list-our-property','listOurProperty')->name('list.our.property');
         // Route::post('/sugesstion-destination','destintaionSuggestion')->name('destination.suggestion');
         // Route::get('/partner-listing','partnerListing')->name('partner.listing');

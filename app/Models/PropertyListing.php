@@ -44,7 +44,7 @@ class PropertyListing extends Model
     }
 
     public function reviews_rating(){
-        return $this->hasMany(PropertyReviewsRating::class,'property_id','id');
+        return $this->hasMany(ReviewDetail::class,'property_id','id')->where('status','1');
     }
     public function enquires() {
         return $this->hasMany(PropertyEnquiry::class,'property_id','id');

@@ -14,8 +14,10 @@ use App\Models\SocialLink;
 
 class frontendController extends Controller
 {
+    // protected $ContactUs='about_details';
+    // protected $socialMedia='about_details';
     public function index() {
-        $aboutUs         = AboutDetails::first();
+        $aboutUs         = AboutDetails::with('aboutUs_gallery_image')->first();
         $attractionArea  = Attraction::get();
         $PropertyListing = PropertyListing::where('status','1')->get();
         $ContactUs       = ContactDetail::first();
@@ -23,23 +25,35 @@ class frontendController extends Controller
         return view("frontend.index",compact('aboutUs','attractionArea','PropertyListing','ContactUs','socialMedia'));
     }
     public function contactUs(){
+        $PropertyListing = PropertyListing::where('status','1')->get();
         $ContactUs       = ContactDetail::first();
         $socialMedia     = SocialLink::first();
-        return view('frontend.contact',compact('ContactUs','socialMedia'));
+        return view('frontend.contact',compact('PropertyListing','ContactUs','socialMedia'));
     }
     public function propertyDetial(){
+        $PropertyListing = PropertyListing::where('status','1')->get();
         $ContactUs       = ContactDetail::first();
         $socialMedia     = SocialLink::first();
-        return view('frontend.property-details',compact('ContactUs','socialMedia'));
+        return view('frontend.property-details',compact('PropertyListing','ContactUs','socialMedia'));
     }
     public function activitiesAttractions(){
+        $attractionArea  = Attraction::get();
+        $PropertyListing = PropertyListing::where('status','1')->get();
         $ContactUs       = ContactDetail::first();
         $socialMedia     = SocialLink::first();
-        return view('frontend.activities-attractions',compact('ContactUs','socialMedia'));
+        return view('frontend.activities-attractions',compact('PropertyListing','ContactUs','socialMedia','attractionArea'));
     }
     public function propertyListing(){
+        $PropertyListing = PropertyListing::where('status','1')->get();
         $ContactUs       = ContactDetail::first();
         $socialMedia     = SocialLink::first();
-        return view('frontend.property-listing',compact('ContactUs','socialMedia'));
+        return view('frontend.property-listing',compact('PropertyListing','ContactUs','socialMedia'));
+    }
+    public function aboutUs(){
+        $PropertyListing = PropertyListing::where('status','1')->get();
+        $ContactUs       = ContactDetail::first();
+        $socialMedia     = SocialLink::first();
+        $data         = AboutDetails::with('aboutUs_gallery_image')->first(); 
+        return view("frontend.about-owner",compact('PropertyListing','ContactUs','socialMedia','data'));
     }
 }
