@@ -8,20 +8,65 @@
 //     return [ratesIsAvailable.indexOf(string) == -1];
 // }
 $(function() {
+    // $('#check_in').datepicker({ 
+    //     dateFormat: "dd-mm-yy",
+    //     defaultDate: "-1w",
+    //     beforeShowDay: function (date) {
+    //         var string = $.datepicker.formatDate('dd-mm-yy', date);
+    //          // check if date is in your array of dates
+    //          console.log(ratesIsAvailable.indexOf(string) );
+    //         if(disableddates.indexOf(string) == -1 && ratesIsAvailable.indexOf(string) != -1) {
+    //             return [true, '', ''];
+    //         }
+    //         else {
+
+    //             return [false, '', ''];
+    //         }
+
+    //     },
+    //     changeYear: true,
+    //     minDate: 0,
+    //     changeMonth: true,
+    //     numberOfMonths: 1,
+    //     onClose: function(selectedDate) {
+    //         $("#check_out").datepicker("option", "minDate", selectedDate);
+    //     }
+    // });
+    // $('#check_out').datepicker({ 
+    //     changeYear: true,
+    //     defaultDate: "-1w",
+    //     beforeShowDay: function (date) {
+    //         var string = jQuery.datepicker.formatDate('dd-mm-yy', date);
+    //          // check if date is in your array of dates
+    //          console.log(ratesIsAvailable.indexOf(string) );
+    //         if(disableddates.indexOf(string) == -1 && ratesIsAvailable.indexOf(string) != -1) {
+    //             return [true, '', ''];
+    //         }
+    //         else {
+
+    //             return [false, '', ''];
+    //         }
+
+    //     },
+    //     minDate: 0,
+    //     changeMonth: true,
+    //     numberOfMonths: 1,
+    //     onClose: function(selectedDate) {
+    //         $("#check_out").datepicker("option", "maxDate", selectedDate);
+    //     }
+    // });
     $('#check_in').datepicker({ 
         defaultDate: "-1w",
+        dateFormat: "dd-mm-yy",
         beforeShowDay: function (date) {
-            var string = jQuery.datepicker.formatDate('dd-mm-yy', date);
-             // check if date is in your array of dates
-             console.log(ratesIsAvailable.indexOf(string) );
-            if(disableddates.indexOf(string) == -1 && ratesIsAvailable.indexOf(string) != -1) {
-                return [true, '', ''];
-            }
-            else {
-
-                return [false, '', ''];
-            }
-
+            // var string=  $.datepicker.formatDate('dd-mm-yy', date)
+         console.log('hello',(date) );
+        //  if(disableddates.indexOf(string) == -1 && ratesIsAvailable.indexOf(string) != -1) {
+        //      return [true, '', ''];
+        //  }
+        //  else { 
+        //      return [false, '', ''];
+        //  }
         },
         changeYear: true,
         minDate: 0,
@@ -35,17 +80,13 @@ $(function() {
         changeYear: true,
         defaultDate: "-1w",
         beforeShowDay: function (date) {
-            var string = jQuery.datepicker.formatDate('dd-mm-yy', date);
-             // check if date is in your array of dates
-             console.log(ratesIsAvailable.indexOf(string) );
-            if(disableddates.indexOf(string) == -1 && ratesIsAvailable.indexOf(string) != -1) {
-                return [true, '', ''];
-            }
-            else {
-
-                return [false, '', ''];
-            }
-
+            console.log('hello',(date) );
+        //   if(disableddates.indexOf(string) == -1 && ratesIsAvailable.indexOf(string) != -1) {
+        //       return [true, '', ''];
+        //   }
+        //   else { 
+        //       return [false, '', ''];
+        //   }
         },
         minDate: 0,
         changeMonth: true,
@@ -54,45 +95,25 @@ $(function() {
             $("#check_out").datepicker("option", "maxDate", selectedDate);
         }
     });
-    $('#start_date').datepicker({ 
-        defaultDate: "-1w",
-        dateFormat: "mm/dd/yy",
-        minDate: 0,
-        changeMonth: true,
-        numberOfMonths: 1,
-        onClose: function(selectedDate) {
-            $("#end_date").datepicker("option", "minDate", selectedDate);
-        }
-    });
-    $('#end_date').datepicker({ 
-        dateFormat: "mm/dd/yy",
-        defaultDate: "-1w",
-        minDate: 0,
-        changeMonth: true,
-        numberOfMonths: 1,
-        onClose: function(selectedDate) {
-            $("#end_date").datepicker("option", "maxDate", selectedDate);
-        }
-    });
 });
 
 // Rate Summery 
+const site_url = window.location.origin;
 calcuateRate = async () => {
-    showLoader();
+    //showLoader();
     if($("#check_in").val() ==''){
         $(".check_in").text("Please first select check in date");
-        hideLoader();
+       // hideLoader();
         return false;
     }
     let data = {
         start_date: $("#check_in").val(),
         end_date: $("#check_out").val(),
         adult: $("#guests").val(),
-        child: $("#children").val(),
-        pet_fees: $("input[name=pet]:checked").val(),
-        pool_heating:$("input[name=pool_heating]:checked").val(),
+        room: $("#rooms").val(),
         property_id: $("input[name=property_id]").val(),
     };
+
     const response = await fetch(site_url+'/calculte-rate', {
         method: "POST",
         body: JSON.stringify(data),
@@ -182,7 +203,7 @@ $("#reviews").on("submit",function(e){
 
 bookingInformation.onsubmit = async (e)=>{
     e.preventDefault();
-    showLoader();
+   // showLoader();
     const response = await fetch(site_url+"/store-booking-information",{
         method:"POST",
         body: new FormData(bookingInformation),
@@ -193,7 +214,7 @@ bookingInformation.onsubmit = async (e)=>{
 
     const result = await response.json();
     if(result.status==500){
-        hideLoader();
+      //  hideLoader();
         toastr.error(result.msg);
         return false;
     }

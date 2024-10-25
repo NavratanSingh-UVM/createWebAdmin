@@ -15,7 +15,7 @@ class PropertyListing extends Model
         'status'
     ];
     public function property_aminities() {
-        return $this->hasMany(PropertiesAminites::class,'property_id','id')->groupBy('sub_aminities_id');
+        return $this->hasMany(PropertiesAminites::class,'property_id','id')->groupBy('aminities_id');
     }
 
     public function property_gallery_image() {

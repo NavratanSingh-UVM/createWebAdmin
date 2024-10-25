@@ -36,7 +36,7 @@ Route::namespace('Frontend')->group(function() {
         // Route::get('/list-our-property','listOurProperty')->name('list.our.property');
         // Route::post('/sugesstion-destination','destintaionSuggestion')->name('destination.suggestion');
         // Route::get('/partner-listing','partnerListing')->name('partner.listing');
-        // Route::post('/calender','calender');
+        Route::post('/calender','calender');
         // Route::get('/property/ical-link/{id}','genratePropertIcalLink');
     });
     Route::controller('PropertyListingController')->group(function () {
@@ -65,6 +65,11 @@ Route::namespace('Frontend')->group(function() {
             return view('frontend.payment-error');
         })->name('payment.failed');
     });
+    Route::controller(CancelBookingController::class)->prefix('cancel-booking')->group(function(){
+        Route::get('cancel/{cancel_id}','cancelBooking')->name('cancel.booking');
+        Route::post('/store','cancelBookingStore')->name('cancel.booking.store');
+        Route::get('/list','cancelBookingList')->name('cancel.bokking.list');
+    });
 
 });
 /* 
@@ -74,8 +79,6 @@ Admin Auth Route end
  Admin Before Login Rote Start 
  */
 Route::middleware(['back-prevent-history','auth'])->group(function () {
-
-
 });
 
     Route::get('/ip',function (){

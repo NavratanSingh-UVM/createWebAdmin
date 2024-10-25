@@ -76,7 +76,6 @@
               @foreach (  $aboutUs->aboutUs_gallery_image->slice(0, 1) as $photo)
                <img src="{{ url('storage/uploads/about/' . $photo->image_name) }}" alt="">
               @endforeach
-                {{-- <img src="{{('frontend-assets/img/bg/03.jpg')}}" alt=""> --}}
             </div>
         </div>
     </section>

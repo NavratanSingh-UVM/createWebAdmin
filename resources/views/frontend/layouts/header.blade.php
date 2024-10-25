@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="{{asset('frontend-assets/css/default.css')}}" />
     <!--====== Style css ======-->
     <link rel="stylesheet" href="{{asset('frontend-assets/css/style.css')}}" />
+      <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
 
 <body>

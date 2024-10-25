@@ -1,5 +1,6 @@
 calenderAvailability = async (date='',property_id) => {
   //  showLoader()
+  const site_url = window.location.origin;
     let data = {
         'date':date,
         'property_id':property_id
@@ -18,5 +19,4 @@ calenderAvailability = async (date='',property_id) => {
         $("#Calendars").html('');
         $("#Calendars").append(results.data);
     }
-    
 }

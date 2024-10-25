@@ -56,4 +56,14 @@ class frontendController extends Controller
         $data         = AboutDetails::with('aboutUs_gallery_image')->first(); 
         return view("frontend.about-owner",compact('PropertyListing','ContactUs','socialMedia','data'));
     }
+    public function calender(Request $request) {
+     dd('hello',$request->all());
+        $propertyDetail = PropertyListing::where('id',$request->input('property_id'))->first();
+        $data = ['cdate'=>$request->input('date'),'propertyDetail'=>$propertyDetail];
+        $view =view('frontend.calender',$data)->render();
+          
+        return response()->json([
+            'data'=>$view
+        ]);
+    }
 }

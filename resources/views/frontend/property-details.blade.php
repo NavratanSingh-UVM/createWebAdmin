@@ -54,39 +54,54 @@
                 <div class="col-lg-4">
                     <div class="room-booking-form">
                         <h5 class="title">Check Availability</h5>
-                        <form action="#">
-                            <div class="input-group input-group-two left-icon mb-20">
-                                <label for="arrival-date">Check In</label>
-                                <div class="icon"><i class="fal fa-calendar-alt"></i></div>
-                                <input type="text" placeholder="20-9-2024" name="arrival-date" id="arrival-date">
-                            </div>
-                            <div class="input-group input-group-two left-icon mb-20">
-                                <label for="departure-date">Check Out</label>
-                                <div class="icon"><i class="fal fa-calendar-alt"></i></div>
-                                <input type="text" placeholder="20-9-2024" name="departure-date" id="departure-date">
-                            </div>
-                            <div class="input-group input-group-two left-icon mb-20">
-                                <label for="room">Rooms</label>
-                                <select name="room" id="room">
-                                    <option value="1">1 Room</option>
-                                    <option value="2" selected>2 Room</option>
-                                    <option value="4">4 Room</option>
-                                    <option value="8">8 Room</option>
-                                </select>
-                            </div>
-                            <div class="input-group input-group-two left-icon mb-20">
-                                <label for="departure-date">Guest</label>
-                                <select name="guest" id="guest">
-                                    <option value="8">8 Guest</option>
-                                    <option value="10" selected>10 Guest</option>
-                                    <option value="12">12 Guest</option>
-                                    <option value="15">15 Guest</option>
-                                </select>
-                            </div>
-                            <div class="input-group">
-                                <button class="main-btn btn-filled">check availability</button>
-                            </div>
-                        </form>
+                            <form id='bookingInformation'>
+                              @csrf
+                               <input type="hidden" name="property_id" value="{{$PropertyData->id}}">
+                               <div class="input-group input-group-two left-icon mb-20">
+                                   <label for="arrival-date">Check In</label>
+                                   <div class="icon"><i class="fal fa-calendar-alt"></i></div>
+                                   <input type="text" placeholder="Check-In" name="check_in" id="check_in"  autocomplete="off">
+                                   <span class="text-danger check_in"></span>
+                                   {{-- <input type="text" placeholder="20-9-2024" name="arrival-date" id="arrival-date">
+                               </div>
+                               <div class="input-group input-group-two left-icon mb-20">
+                                   <label for="departure-date">Check Out</label>
+                                   <div class="icon"><i class="fal fa-calendar-alt"></i></div>
+                                   {{-- <input type="text" placeholder="20-9-2024" name="departure-date" id="departure-date"> --}}
+                                   <input type="text" placeholder="Check-Out" name="check_out" id="check_out" autocomplete="off" onchange="calcuateRate()"><span class="text-danger check_out"></span>
+                               </div>
+                               <div class="input-group input-group-two left-icon mb-20">
+                                   <label for="room">Rooms</label>
+                                   <select  title="rooms" data-style="bg-white" id="rooms" name="rooms">
+                                   <option value="">Select Rooms</option>
+                                       @for ($i=1;$i<=15;$i++) 
+                                           @if($i==15) 
+                                               <option  value="{{ $i }}+">{{ $i }} + Rooms</option>
+                                           @else
+                                               <option value="{{ $i }}">{{ $i }} Rooms</option>
+                                           @endif
+                                       @endfor
+                                   </select>
+                                   <span class="text-danger guests"></span>
+                               </div>
+                               <div class="input-group input-group-two left-icon mb-20">
+                                   <label for="departure-date">Guest</label>
+                                   <select  title="guests" data-style="bg-white" id="guests" name="guests" onchange="calcuateRate()">
+                                   <option value="">Select Guests</option>
+                                       @for ($i=1;$i<=25;$i++) 
+                                           @if($i==25) 
+                                               <option  value="{{ $i }}+">{{ $i }} + Guests</option>
+                                           @else
+                                               <option value="{{ $i }}">{{ $i }} Guests</option>
+                                           @endif
+                                       @endfor
+                                   </select>
+                                   <span class="text-danger guests"></span>
+                               </div>
+                               <div class="input-group">
+                                   <button  type="submit" class="main-btn btn-filled  rounded">check availability</button>
+                               </div>
+                            </form>
                     </div>
                 </div>
                 <div class="room-details">
@@ -98,8 +113,7 @@
                            @foreach ($PropertyData->property_aminities as $mainAmminites)
                            <strong>{{ucfirst($mainAmminites->mainAmenities->aminity_name)}}</strong>
                              <ul class="list-unstyled mb-0 row no-gutters">
-                                 @foreach(App\Http\Helper\Helper::getSubAmenites($mainAmminites->aminities_id,$mainAmminites->property_id)
-                                 as $subAminity )
+                                 @foreach(App\Http\Helper\Helper::getSubAmenites($mainAmminites->aminities_id,$mainAmminites->property_id) as $subAminity )
                                  <li class="col-sm-3 col-6 mb-2"> <i class="far fa-check mr-2 text-primary"></i>
                                      {{$subAminity->subAminites->name}}
                                  </li>
@@ -138,7 +152,7 @@
                             <h2 class="sub-title">Cancellation policy:</h2>
                             <p>{!! $PropertyData->cancellation_policies!!}</p>
                          </div>
-                        <div class="room-rules">
+                        {{-- <div class="room-rules">
                              <h2>Rates</h2>
                              <table class="responsive-table" cellspacing="0" cellpadding="0">
                                  <thead>
@@ -172,196 +186,7 @@
                                         </div>
                                     </div>
                                  </div>
-                        </div>
-                        {{-- <section>
-                            <h4 class="fs-22 text-heading lh-15 mb-5 pt-3">Rating & Reviews</h4>
-                            <div class="card border-0 mb-4">
-                            <div class="card-body p-0">
-                                <div class="row">
-                                    <div class="col-sm-6 mb-6 mb-sm-0">
-                                        <div class="bg-gray-01 rounded-lg pt-2 px-6 pb-6">
-                                            <h5 class="fs-16 lh-2 text-heading mb-6">Avarage User Rating</h5>
-                                            <p class="fs-40 text-heading font-weight-bold mb-6 lh-1">
-                                                @if($PropertyData->reviews_rating->count() >=1) {{
-                                                    round($PropertyData->reviews_rating->sum('rating')/$PropertyData->reviews_rating->count(),1)
-                                                   }} @else 0 @endif <span
-                                                    class="fs-18 text-gray-light font-weight-normal">/5</span></p>
-                                            <ul class="list-inline">
-                                                @for($i=1;$i<=5;$i++) @if($PropertyData->reviews_rating->count() >=1)
-                                                    @if($PropertyData->reviews_rating->sum('rating')/$PropertyData->reviews_rating->count()
-                                                    >=$i)
-                                                    <li
-                                                        class="list-inline-item bg-warning text-white w-46px h-46 rounded-lg d-inline-flex align-items-center justify-content-center fs-18 mb-1">
-                                                        <i class="fas fa-star"></i>
-                                                    </li>
-                                                    @else
-                                                    <li
-                                                        class="list-inline-item bg-gray-04 text-white w-46px h-46 rounded-lg d-inline-flex align-items-center justify-content-center fs-18 mb-1">
-                                                        <i class="fas fa-star"></i>
-                                                    </li>
-                                                    @endif
-                                                    @else
-                                                    <li
-                                                        class="list-inline-item bg-gray-04 text-white w-46px h-46 rounded-lg d-inline-flex align-items-center justify-content-center fs-18 mb-1">
-                                                        <i class="fas fa-star"></i>
-                                                    </li>
-                                                    @endif
-                                                    @endfor
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    @php
-                                    $fiveStarRating = 0;
-                                    $fourStarRating = 0;
-                                    $threeStarRating = 0;
-                                    $twoStarRating = 0;
-                                    $oneStarRating = 0;
-                                    foreach ($PropertyData->reviews_rating as $key => $review):
-                                    if ($review->rating=='5') :
-                                    $fiveStarRating++;
-                                    elseif ($review->rating=='4') :
-                                    $fourStarRating++;
-                                    elseif ($review->rating=='3') :
-                                    $threeStarRating++;
-                                    elseif ($review->rating=='2') :
-                                    $twoStarRating++;
-                                    elseif ($review->rating=='1') :
-                                    $oneStarRating++;
-                                    endif;
-                                    endforeach;
-                                    @endphp
-                                    <div class="col-sm-6 pt-3">
-                                        <h5 class="fs-16 lh-2 text-heading mb-5">Rating Breakdown</h5>
-                                        <div class="d-flex align-items-center mx-n1">
-                                            <ul class="list-inline d-flex px-1 mb-0">
-                                                <li class="list-inline-item text-warning mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                                <li class="list-inline-item text-warning mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                                <li class="list-inline-item text-warning mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                                <li class="list-inline-item text-warning mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                                <li class="list-inline-item text-warning mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                            </ul>
-                                            <div class="d-block w-100 px-1">
-                                                <div class="progress rating-progress">
-                                                    <div class="progress-bar bg-warning" role="progressbar"
-                                                        style="width: @if($fiveStarRating>=1){{round(($fiveStarRating/$PropertyData->reviews_rating->sum('rating')*100),0)??0}} @else 0 @endif%"
-                                                        aria-valuenow="@if($fiveStarRating>=1){{   round(($fiveStarRating/$PropertyData->reviews_rating->sum('rating')*100),1)??0 }}@else 0 @endif"
-                                                        aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                            <div class="text-muted px-1">@if($fiveStarRating>=1){{
-                                                round(($fiveStarRating/$PropertyData->reviews_rating->sum('rating')*100),1)??0
-                                                }}@else 0 @endif %</div>
-                                        </div>
-                                        <div class="d-flex align-items-center mx-n1">
-                                            <ul class="list-inline d-flex px-1 mb-0">
-                                                <li class="list-inline-item text-warning mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                                <li class="list-inline-item text-warning mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                                <li class="list-inline-item text-warning mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                                <li class="list-inline-item text-warning mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                                <li class="list-inline-item text-border mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                            </ul>
-                                            <div class="d-block w-100 px-1">
-                                                <div class="progress rating-progress">
-                                                    <div class="progress-bar bg-warning" role="progressbar"
-                                                        style="width:@if($fourStarRating>=1){{round(($fourStarRating/$PropertyData->reviews_rating->sum('rating')*100),0)??0}}@else 0 @endif%"
-                                                        aria-valuenow="@if($fourStarRating>=1){{ round(($fourStarRating/$PropertyData->reviews_rating->sum('rating')*100),0)??0 }} @else 0 @endif"
-                                                        aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                            <div class="text-muted px-1">
-                                                @if($fourStarRating>=1){{round(($fourStarRating/$PropertyData->reviews_rating->sum('rating')*100),0)??0
-                                                }}@else 0 @endif%</div>
-                                        </div>
-                                        <div class="d-flex align-items-center mx-n1">
-                                            <ul class="list-inline d-flex px-1 mb-0">
-                                                <li class="list-inline-item text-warning mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                                <li class="list-inline-item text-warning mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                                <li class="list-inline-item text-warning mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                                <li class="list-inline-item text-border mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                                <li class="list-inline-item text-border mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                            </ul>
-                                            <div class="d-block w-100 px-1">
-                                                <div class="progress rating-progress">
-                                                    <div class="progress-bar bg-warning" role="progressbar"
-                                                        style="width: @if($threeStarRating>=1){{round(($threeStarRating/$PropertyData->reviews_rating->sum('rating')*100),1)??0}}@else 0 @endif%"
-                                                        aria-valuenow="@if($threeStarRating>=1) {{ round(($threeStarRating/$PropertyData->reviews_rating->sum('rating')*100),1)??0 }} @else 0 @endif"
-                                                        aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                            <div class="text-muted px-1">
-                                                @if($threeStarRating>=1){{round(($threeStarRating/$PropertyData->reviews_rating->sum('rating')*100),0)??0}}@else
-                                                0 @endif%</div>
-                                        </div>
-                                        <div class="d-flex align-items-center mx-n1">
-                                            <ul class="list-inline d-flex px-1 mb-0">
-                                                <li class="list-inline-item text-warning mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                                <li class="list-inline-item text-warning mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                                <li class="list-inline-item text-border mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                                <li class="list-inline-item text-border mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                                <li class="list-inline-item text-border mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                            </ul>
-                                            <div class="d-block w-100 px-1">
-                                                <div class="progress rating-progress">
-                                                    <div class="progress-bar bg-warning" role="progressbar"
-                                                        style="width:@if($twoStarRating>=1){{round(($twoStarRating/$PropertyData->reviews_rating->sum('rating')*100),0)??0 }} @else 0 @endif%"
-                                                        aria-valuenow="@if($twoStarRating>=1) {{ round(($twoStarRating/$PropertyData->reviews_rating->sum('rating')*100),1)??0 }} @else 0 @endif"
-                                                        aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                            <div class="text-muted px-1">@if($twoStarRating>=1){{
-                                                round(($twoStarRating/$PropertyData->reviews_rating->sum('rating')*100),1)??0
-                                                }} @else 0 @endif%</div>
-                                        </div>
-                                        <div class="d-flex align-items-center mx-n1">
-                                            <ul class="list-inline d-flex px-1 mb-0">
-                                                <li class="list-inline-item text-warning mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                                <li class="list-inline-item text-border mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                                <li class="list-inline-item text-border mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                                <li class="list-inline-item text-border mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                                <li class="list-inline-item text-border mr-1"><i
-                                                        class="fas fa-star"></i></li>
-                                            </ul>
-                                            <div class="d-block w-100 px-1">
-                                                <div class="progress rating-progress">
-                                                    <div class="progress-bar bg-warning" role="progressbar"
-                                                        style="width: @if($oneStarRating>=1){{ round(($oneStarRating/$PropertyData->reviews_rating->sum('rating')*100),1)??0 }} @else 0 @endif % "
-                                                        aria-valuenow="@if($oneStarRating>=1){{ round(($oneStarRating/$PropertyData->reviews_rating->sum('rating')*100),1)??0 }} @else 0 @endif"
-                                                        aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                            <div class="text-muted px-1">@if($oneStarRating>=1) {{
-                                                round(($oneStarRating/$PropertyData->reviews_rating->sum('rating')*100),1)??0
-                                                }} @else 0 @endif%</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            </div>
-                        </section> --}}
+                        </div> --}}
                         <section class="pt-5">
                          <div class="card border-0 mb-4">
                             <div class="card-body p-0">
@@ -504,10 +329,10 @@
     </div>
   </div>
 </div>
-@endsection
-@push('js')
-<script src="{{asset('frontend-assets/js/custom/custom.js')}}"></script>
+ <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script src="{{asset('frontend-assets/js/custom/calender-avaliblity.js')}}"></script>
+<script src="{{ asset('frontend-assets/js/custom/custom.js') }}"></script>
 <script>
     $(document).ready(function(){
         disableddates = {!!App\Http\Helper\Helper::getPropertyBookingDate($PropertyData->id)!!};
@@ -515,4 +340,5 @@
         calenderAvailability("","{{$PropertyData->id}}");
     })
 </script>
-@endpush
+
+@endsection
